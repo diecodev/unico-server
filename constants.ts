@@ -7,5 +7,6 @@ export const options: CookiesSetDeleteOptions = {
   path: "/",
   sameSite: "strict",
   secure: Deno.env.get("ENVIRONMENT") !== "development",
-  maxAge: 60 * 60 * 24 * 31 * 12
+  maxAge: 60 * 60 * 24 * 31 * 12,
+  ignoreInsecure: true,
 }
