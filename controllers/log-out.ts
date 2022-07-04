@@ -8,12 +8,14 @@ export const logout = async (context: Context) => {
     };
     return;
   }
-  context.cookies.set("untk", "", {
+
+  context.cookies.delete("untk", {
     maxAge: -1,
     path: "/",
   });
+  context.response.status = 200;
   context.response.body = {
-    message: "Logged out successfull.",
+    message: "Logged out successfully.",
     data: {},
     isLoggedIn: false,
   };
