@@ -28,7 +28,7 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
 
     // comparing the password
     console.log("password incorrect")
-    const is_password_correct = await bcrypt.compare(password, admin_found.password as string);
+    const is_password_correct = bcrypt.compareSync(password, admin_found.password as string);
 
     console.log("password correct")
     // If password is incorrect, return error

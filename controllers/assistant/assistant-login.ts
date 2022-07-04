@@ -27,7 +27,7 @@ export const assistantLogin = async ({ request, response, cookies }: Context) =>
     if (!assistant_found) throw new Error("Plase, check your credentials.");
 
     // comparing the password
-    const is_password_correct = await bcrypt.compare(password, assistant_found.password as string);
+    const is_password_correct = bcrypt.compareSync(password, assistant_found.password as string);
 
     // if password is incorrect, return error
     if (!is_password_correct) throw new Error("Plase, check your credentials.");
