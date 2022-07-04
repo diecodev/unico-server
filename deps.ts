@@ -7,4 +7,4 @@ export { decodeJwt, jwtVerify as verifyJwt, SignJWT as signJwt } from "https://d
 
 export { config as dotEnv } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
 
-export * as bcrypt from "https://deno.land/x/bcrypt@v0.4.0/mod.ts";
+export * as bcrypt from "https://raw.githubusercontent.com/JamesBroadberry/deno-bcrypt/issue/28/mod.ts";
