@@ -16,5 +16,7 @@ export const logout = async (context: Context) => {
   });
   context.response.body = {
     message: "Logged out successfull.",
+    data: {},
+    isLoggedIn: false,
   };
 };
