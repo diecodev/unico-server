@@ -9,14 +9,13 @@ export const logout = async (context: Context) => {
     return;
   }
   context.cookies.set("untk", "", {
-    expires: new Date(Date.now() - 1),
-    httpOnly: true,
+    maxAge: -1,
     path: "/",
-    sameSite: "strict",
   });
   context.response.body = {
     message: "Logged out successfull.",
     data: {},
     isLoggedIn: false,
   };
+  return;
 };
