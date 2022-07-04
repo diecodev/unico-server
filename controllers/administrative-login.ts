@@ -29,7 +29,6 @@ export const administrativeLogin = async ({ response, cookies }: Context) => {
       const collection: string = payload.role === "admin"
         ? "admins"
         : "assistants";
-      console.log(payload);
 
       // connecting to DB and consulting data
       const user = db.collection<AdminSchema>(collection);

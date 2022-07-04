@@ -4,7 +4,6 @@ const client = new MongoClient();
 
 const connectDB = async () => {
   const env = Deno.env.toObject();
-  console.log(env);
 
   await client.connect({
     db: Deno.env.get("DB_NAME") as string,

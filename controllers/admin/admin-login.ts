@@ -27,26 +27,22 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     if (!admin_found) throw new Error("Please, check your credentials")
 
     // comparing the password
-    console.log("password incorrect")
     const is_password_correct = bcrypt.compareSync(password, admin_found.password as string);
 
-    console.log("password correct")
     // If password is incorrect, return error
     if (!is_password_correct) throw new Error("Please, check your credentials.")
 
     // not returning the password
     delete admin_found.password;
-    console.log("delete password")
+
     // creating the token
     const token = await new signJwt({ ...admin_found }).setProtectedHeader({ alg: "HS256" }).sign(privateKey);
-    console.log("create token")
     response.status = 200;
     response.body = {
       data: admin_found,
       isLoggedIn: true,
     };
     cookies.set("untk", JSON.stringify(token), options);
-    console.log("response and cookies");
     return;
   } catch (error) {
     // If login is not successful, return error
