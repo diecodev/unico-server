@@ -47,8 +47,8 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     return;
   } catch (error) {
     // If login is not successful, return error
-    if (error instanceof Error) return response.body = { error: error.message };
+    // if (error instanceof Error) return response.body = { error: error.message };
 
-    return response.body = { error: "Something went wrong." };
+    return response.body = { error: error.toString() };
   }
 };
