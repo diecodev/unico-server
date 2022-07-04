@@ -3,6 +3,10 @@ import { MongoClient } from "../deps.ts";
 const client = new MongoClient();
 
 const connectDB = async () => {
+  console.log(Deno.env.get("DB_HOST"))
+  console.log(Deno.env.get("DB_NAME"))
+  console.log(Deno.env.get("DB_USERNAME"))
+  console.log(Deno.env.get("PORT"))
   await client.connect({
     db: Deno.env.get("DB_NAME") as string,
     tls: true,

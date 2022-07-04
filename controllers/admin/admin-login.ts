@@ -22,6 +22,7 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     // connecting to DB and consulting data
     const admin = db.collection<AdminSchema>("admins");
     const admin_found: Partial<AdminSchema> | undefined = await admin.findOne({ username });
+    console.log(admin_found)
 
     // If admin does not exist, return error
     if (!admin_found) throw new Error("Please, check your credentials")
@@ -47,8 +48,8 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     return;
   } catch (error) {
     // If login is not successful, return error
-    // if (error instanceof Error) return response.body = { error: error.message };
+    if (error instanceof Error) return response.body = { error: error.message };
 
-    return response.body = { error: error.toString() };
+    return response.body = { error: "Something went wrong." };
   }
 };
