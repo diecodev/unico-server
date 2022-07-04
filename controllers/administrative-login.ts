@@ -6,6 +6,7 @@ import { AdminSchema } from "../types.d.ts";
 export const administrativeLogin = async ({ response, cookies }: Context) => {
   // Taking the cookie
   const token = await cookies.get("untk");
+  console.log(token);
 
   // if request do not have cookies, return error
   if (!token) {
