@@ -22,7 +22,6 @@ router
   .post("/assistant", assistantLogin) // assistant log in
   .put("/assistant", assistantUpdate) // update assistant data
 
-
 // Log-out api endpoint
 router
   .get("/logout", logout) // log out the user
