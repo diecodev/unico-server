@@ -1,8 +1,9 @@
-import { MongoClient } from "../deps.ts";
+import { dotEnv, MongoClient } from "../deps.ts";
 
 const client = new MongoClient();
 
 const connectDB = async () => {
+  dotEnv({ export: true });
   await client.connect({
     db: Deno.env.get("DB_NAME") as string,
     tls: true,
@@ -20,7 +21,7 @@ const connectDB = async () => {
     },
   });
 
-  const db = client.database(Deno.env.get("DB_NAME") as string);
+  const db = client.database("unicoWebDB");
 
   return db;
 };
