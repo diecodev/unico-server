@@ -27,9 +27,10 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     if (!admin_found) throw new Error("Please, check your credentials")
 
     // comparing the password
+    console.log("password incorrect")
     const is_password_correct = await bcrypt.compare(password, admin_found.password as string);
-    console.log("password correct")
 
+    console.log("password correct")
     // If password is incorrect, return error
     if (!is_password_correct) throw new Error("Please, check your credentials.")
 
