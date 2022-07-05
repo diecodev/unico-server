@@ -1,7 +1,12 @@
 import { Bson } from "./deps.ts";
 
-// admin, asignador, agendador, cadete, cliente
-type Role = "admin" | "allocator" | "scheduler" | "cadet" | "client";
+// admin, allocator, scheduler, cadet, client
+export type Role = "admin" | "asignador" | "agendador" | "cadete" | "cliente";
+export type PaymentMethod = "Efectivo" | "Transferencia";
+export type Schedule = {
+  start_time: string;
+  end_time: string;
+};
 
 export interface AdminSchema {
   _id: Bson.ObjectId;
@@ -15,19 +20,24 @@ export interface AdminSchema {
   balance: number;
 }
 
-export interface AssistantSchema extends Omit<AdminSchema, "role"> {
-  role: Role;
-  direction: string;
+export interface AssistantSchema extends AdminSchema {
+  address: string;
   phone: string;
-  profilePic: string;
-  isActive: boolean;
+  is_active: boolean;
 }
 
-export interface Cadet extends Omit<AssistantSchema, "role"> {
-  role: Role;
+export interface CadetSchema extends AssistantSchema {
   dni: string;
   patent: string;
-  dniFrontPic: string;
-  dniBackPic: string;
-  vehiclePic: string;
+  dni_frontal_picture: string;
+  dni_back_picture: string;
+  vehicle_picture: string;
+}
+
+export interface ClientSchema extends Omit<AssistantSchema, "email"> {
+  payment_method: PaymentMethod;
+  schedule?: Schedule;
+  enterprise?: string;
+  employee_name?: string;
+  email?: string;
 }
