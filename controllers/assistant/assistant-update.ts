@@ -21,7 +21,7 @@ export const assistantUpdate = async ({ request, response, cookies }: Context) =
     const payload = (await verifyJwt(token, privateKey)).payload as unknown as Partial<AssistantSchema>;
 
     // If user role is not allocator or scheduler, then continue...
-    if (payload.role !== "allocator" && payload.role !== "scheduler") {
+    if (payload.role !== "asignador" && payload.role !== "agendador") {
       throw new Error("You do not have permission to access this resource.");
     }
 

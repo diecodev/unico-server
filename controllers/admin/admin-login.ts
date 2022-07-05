@@ -30,7 +30,7 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     const is_password_correct = bcrypt.compareSync(password, admin_found.password as string);
 
     // If password is incorrect, return error
-    if (!is_password_correct) throw new Error("Please, check your credentials.")
+    if (!is_password_correct) throw new Error("Please, check your credentials.");
 
     // not returning the password
     delete admin_found.password;
