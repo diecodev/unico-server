@@ -4,7 +4,7 @@ import db from "./db.ts";
 
 const envryptPassword = async (password: string) => {
   const salt = bcrypt.genSaltSync(10);
-  return await bcrypt.hash(password, salt);
+  return await bcrypt.hashSync(password, salt);
 }
 
 export const insertAssistant = async (data: AssistantSchema) => {
