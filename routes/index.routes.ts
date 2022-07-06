@@ -6,6 +6,7 @@ import { adminUpdate } from "../controllers/admin/admin-update.ts";
 import { adminRegisterUsers } from "../controllers/administrative-register-users.ts";
 import { assistantLogin } from "../controllers/assistant/assistant-login.ts"
 import { assistantUpdate } from "../controllers/assistant/assistant-update.ts"
+import { cadetLogin } from "../controllers/cadet/cadet-login.ts";
 
 export const router = new Router();
 
@@ -13,6 +14,7 @@ export const router = new Router();
 router
   .post("/admin", adminLogin) // admin log in
   .put("/admin", adminUpdate) // update admin data
+  .put("/admin/:field", () => { }) // update admin username, password and email information
 
 // verify administrative login
 router
@@ -23,6 +25,13 @@ router
 router
   .post("/assistant", assistantLogin) // assistant log in
   .put("/assistant", assistantUpdate) // update assistant data
+  .put("/assistant/:field", () => { }) // update assistant username, password and email information
+
+// Cadets api endpoints
+router
+  .post("/cadet", cadetLogin) // cadet login
+  .post("/cadet", cadetLogin) // update cadet data
+  .post("/cadet/:field", () => { }) // cadet update username, password and email information
 
 // Log-out api endpoint
 router
