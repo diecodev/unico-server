@@ -28,7 +28,7 @@ const connectDB = async () => {
     },
   });
 
-  const db = client.database("unicoWebDB");
+  const db = client.database(Deno.env.get("DB_NAME") as string);
   return db;
 };
 
