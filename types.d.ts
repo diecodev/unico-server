@@ -49,14 +49,12 @@ export interface ClientSchema extends Omit<AssistantSchema, "email"> {
 
 export interface ServiceSchema {
   client_id: Bson.ObjectId; // cleint id to populate info
-  delivered_by_admin?: Bson.ObjectId;
-  delivered_by_assistant?: Bson.ObjectId;
-  delivered_by_cadet?: Bson.ObjectId;
-  picked_up_by_admin?: Bson.ObjectId;
-  picked_up_by_assistant?: Bson.ObjectId;
-  picked_up_by_cadet?: Bson.ObjectId;
-  scheduled_by_admin: Bson.ObjectId;
-  scheduled_by_aassistant: Bson.ObjectId;
+  delivered_by?: Bson.ObjectId | Partial<AdminSchema> | Partial<AssistantSchema> | Partial<CadetSchema>;
+  delivered_by_model?: string;
+  picked_up_by?: Bson.ObjectId | Partial<AdminSchema> | Partial<AssistantSchema> | Partial<CadetSchema>;
+  picked_up_by_model?: string;
+  scheduled_by: Bson.ObjectId | Partial<AdminSchema> | Partial<AssistantSchema> | Partial<CadetSchema>;
+  scheduled_by_model: string;
   origin_address: string;
   origin_address_details?: string;
   destination_address: string;
@@ -72,9 +70,8 @@ export interface ServiceSchema {
   // recibir dinero en destino para devovler
   collect_money: boolean;
   collect_money_amount?: number;
-  return_collected_money_to_admin?: Bson.ObjectId;
-  return_collected_money_to_assistant?: Bson.ObjectId;
-  return_collected_money_to_cadet?: Bson.ObjectId;
+  return_collected_money_to?: Bson.ObjectId | Partial<AdminSchema> | Partial<AssistantSchema> | Partial<CadetSchema>;
+  return_collected_money_to_model?: string;
   // contraentrega (pago del servicio en destino)
   upon_delivery: boolean;
   payment_method: PaymentMethod;
