@@ -8,7 +8,7 @@ import { assistantLogin } from "../controllers/assistant/assistant-login.ts"
 import { assistantUpdate } from "../controllers/assistant/assistant-update.ts"
 import { cadetLogin } from "../controllers/cadet/cadet-login.ts";
 import { servicesByDateAscendig } from "../controllers/service/services-by-date-asc.ts"
-// import { servicesByDateDescendig } from "../controllers/service/services-by-date-desc.ts"
+import { servicesByDateDescendig } from "../controllers/service/services-by-date-desc.ts"
 
 export const router = new Router();
 
@@ -42,7 +42,7 @@ router
 // services api endpoints
 router
   .get("/services", servicesByDateAscendig) // get all services available * ascending * (admins and assistants)
-  // .get("/services/descending", servicesByDateDescendig) // get all services available * descending * (admins and assistants)
+  .get("/services/desc", servicesByDateDescendig) // get all services available * descending * (admins and assistants)
   .get("/services/cadet/:id", () => { }) // get all services available for a cadet
 
 // Log-out api endpoint
