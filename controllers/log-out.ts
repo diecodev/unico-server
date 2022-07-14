@@ -1,7 +1,7 @@
 import { Context } from "../deps.ts";
 
 export const logout = async (context: Context) => {
-  if (!(await context.cookies.get("untk"))) {
+  if (!(await context.cookies.get("untk", { signed: true })) && !(await context.cookies.get("untkad", { signed: true }))) {
     context.response.status = 401;
     context.response.body = {
       meesage: "You do not have permission to access this resource.",
@@ -10,6 +10,11 @@ export const logout = async (context: Context) => {
   }
 
   context.cookies.delete("untk", {
+    maxAge: -1,
+    path: "/",
+  });
+
+  context.cookies.delete("untkad", {
     maxAge: -1,
     path: "/",
   });
