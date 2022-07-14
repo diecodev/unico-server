@@ -25,13 +25,13 @@ export interface AdminSchema {
   balance: number;
 }
 
-export interface AssistantSchema extends AdminSchema {
+export interface SchedulerSchema extends AdminSchema {
   address: string;
   phone: string;
   is_active: boolean;
 }
 
-export interface CadetSchema extends AssistantSchema {
+export interface CadetSchema extends SchedulerSchema {
   dni: string;
   patent: string;
   dni_frontal_picture: string;
@@ -39,7 +39,7 @@ export interface CadetSchema extends AssistantSchema {
   vehicle_picture: string;
 }
 
-export interface ClientSchema extends Omit<AssistantSchema, "email"> {
+export interface ClientSchema extends Omit<SchedulerSchema, "email"> {
   payment_method: PaymentMethod;
   schedule?: Schedule;
   enterprise?: string;
@@ -49,11 +49,11 @@ export interface ClientSchema extends Omit<AssistantSchema, "email"> {
 
 export interface ServiceSchema {
   client_id: Bson.ObjectId; // cleint id to populate info
-  delivered_by?: Bson.ObjectId | Partial<AdminSchema> | Partial<AssistantSchema> | Partial<CadetSchema>;
+  delivered_by?: Bson.ObjectId | Partial<AdminSchema> | Partial<SchedulerSchema> | Partial<CadetSchema>;
   delivered_by_model?: string;
-  picked_up_by?: Bson.ObjectId | Partial<AdminSchema> | Partial<AssistantSchema> | Partial<CadetSchema>;
+  picked_up_by?: Bson.ObjectId | Partial<AdminSchema> | Partial<SchedulerSchema> | Partial<CadetSchema>;
   picked_up_by_model?: string;
-  scheduled_by: Bson.ObjectId | Partial<AdminSchema> | Partial<AssistantSchema> | Partial<CadetSchema>;
+  scheduled_by: Bson.ObjectId | Partial<AdminSchema> | Partial<SchedulerSchema> | Partial<CadetSchema>;
   scheduled_by_model: string;
   origin_address: string;
   origin_address_details?: string;
@@ -70,7 +70,7 @@ export interface ServiceSchema {
   // recibir dinero en destino para devovler
   collect_money: boolean;
   collect_money_amount?: number;
-  return_collected_money_to?: Bson.ObjectId | Partial<AdminSchema> | Partial<AssistantSchema> | Partial<CadetSchema>;
+  return_collected_money_to?: Bson.ObjectId | Partial<AdminSchema> | Partial<SchedulerSchema> | Partial<CadetSchema>;
   return_collected_money_to_model?: string;
   // contraentrega (pago del servicio en destino)
   upon_delivery: boolean;

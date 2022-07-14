@@ -17,14 +17,14 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     const { username, password } = await request.body({ type: "json" }).value as LoginRequest;
 
     // If body does not contain username or password, return error
-    if (!username || !password) throw new Error("Please, check your credentials")
+    if (!username || !password) throw new Error("Please, check your credentials.")
 
     // connecting to DB and consulting data
     const admin = db.collection<AdminSchema>("admins");
     const admin_found: Partial<AdminSchema> | undefined = await admin.findOne({ username });
 
     // If admin does not exist, return error
-    if (!admin_found) throw new Error("Please, check your credentials")
+    if (!admin_found) throw new Error("Please, check your credentials.")
 
     // comparing the password
     const is_password_correct = bcrypt.compareSync(password, admin_found.password as string);
@@ -35,14 +35,20 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     // not returning the password
     delete admin_found.password;
 
+    const jwt_data = {
+      role: admin_found.role,
+      _id: admin_found._id,
+      isLoggedIn: true,
+    }
+
     // creating the token
-    const token = await new signJwt({ ...admin_found }).setProtectedHeader({ alg: "HS256" }).sign(privateKey);
+    const token = await new signJwt(jwt_data).setProtectedHeader({ alg: "HS256" }).sign(privateKey);
     response.status = 200;
     response.body = {
       data: admin_found,
       isLoggedIn: true,
     };
-    cookies.set("untk", JSON.stringify(token), options);
+    await cookies.set("untkad", token, options);
     return;
   } catch (error) {
     // If login is not successful, return error

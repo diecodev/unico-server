@@ -1,30 +1,25 @@
-import { AssistantSchema, CadetSchema, ClientSchema } from "../types.d.ts";
-import { bcrypt } from "../deps.ts";
+import { SchedulerSchema, CadetSchema, ClientSchema } from "../types.d.ts";
+import { encryptPassword } from "../constants.ts";
 import db from "./db.ts";
 
-const envryptPassword = async (password: string) => {
-  const salt = bcrypt.genSaltSync(10);
-  return await bcrypt.hashSync(password, salt);
-}
+export const insertScheduler = async (data: SchedulerSchema) => {
+  const scheduler_collection = db.collection<SchedulerSchema>("schedulers");
 
-export const insertAssistant = async (data: AssistantSchema) => {
-  const assistant_collection = db.collection<AssistantSchema>("assistants");
+  const scheduler_exists = await scheduler_collection.findOne({ username: data.username, $or: [{ email: data.email }, { phone: data.phone }] });
 
-  const assistant_exists = await assistant_collection.findOne({ username: data.username, $or: [{ email: data.email }, { phone: data.phone }] });
+  if (scheduler_exists) throw new Error("The scheduler already exists.");
 
-  if (assistant_exists) throw new Error("The assistant already exists.");
-
-  const encrypted_password = await envryptPassword(data.password);
+  const encrypted_password = encryptPassword(data.password);
 
   data.password = encrypted_password;
 
-  const assistant_id = await assistant_collection.insertOne(data);
+  const scheduler_id = await scheduler_collection.insertOne(data);
 
-  const assistant = await assistant_collection.findOne({ _id: assistant_id }) as Partial<AssistantSchema>;
+  const scheduler = await scheduler_collection.findOne({ _id: scheduler_id }) as Partial<SchedulerSchema>;
 
-  delete assistant.password;
+  delete scheduler.password;
 
-  return assistant;
+  return scheduler;
 }
 
 export const insertCadet = async (data: CadetSchema) => {
@@ -34,7 +29,7 @@ export const insertCadet = async (data: CadetSchema) => {
 
   if (cadet_exists) throw new Error("The cadet already exists.");
 
-  const encrypted_password = await envryptPassword(data.password);
+  const encrypted_password = encryptPassword(data.password);
 
   data.password = encrypted_password;
 
@@ -54,7 +49,7 @@ export const insertClient = async (data: ClientSchema) => {
 
   if (client_exists) throw new Error("The client already exists.");
 
-  const encrypted_password = await envryptPassword(data.password);
+  const encrypted_password = encryptPassword(data.password);
 
   data.password = encrypted_password;
 

@@ -5,7 +5,7 @@ import { CadetSchema } from "../../types.d.ts";
 
 export const cadetUpdate = async ({ request, response, cookies }: Context) => {
   // Taking the cookie
-  const token = await cookies.get("untk");
+  const token = await cookies.get("untk", { signed: true });
 
   // setting response to json and status code to 403
   response.type = "application/json";
@@ -60,7 +60,7 @@ export const cadetUpdate = async ({ request, response, cookies }: Context) => {
     // If everything is ok, return the new data
     response.status = 200;
     response.body = { data: new_cadet };
-    cookies.set("untk", new_token, options);
+    await cookies.set("untk", new_token, options);
     return;
 
   } catch (error) {

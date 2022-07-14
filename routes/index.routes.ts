@@ -1,26 +1,30 @@
-import { Router, Context } from "../deps.ts";
+import { Router } from "../deps.ts";
+
 import { adminLogin } from "../controllers/admin/admin-login.ts";
-import { logout } from "../controllers/log-out.ts";
-import { administrativeLogin } from "../controllers/administrative-login.ts";
 import { adminUpdate } from "../controllers/admin/admin-update.ts";
+import { adminUpdateCriticalFields } from "../controllers/admin/admin-critical-fields.ts";
+
+import { administrativeLogin } from "../controllers/administrative-login.ts";
 import { adminRegisterUsers } from "../controllers/administrative-register-users.ts";
-import { assistantLogin } from "../controllers/assistant/assistant-login.ts"
-import { assistantUpdate } from "../controllers/assistant/assistant-update.ts"
+
+import { schedulerLogin } from "../controllers/scheduler/scheduler-login.ts"
+import { schedulerUpdate } from "../controllers/scheduler/scheduler-update.ts"
+import { schedulerUpdateCriticalFields } from "../controllers/scheduler/scheduler-critical-fields.ts"
+
 import { cadetLogin } from "../controllers/cadet/cadet-login.ts";
+
 import { servicesByDateAscendig } from "../controllers/service/services-by-date-asc.ts"
 import { servicesByDateDescendig } from "../controllers/service/services-by-date-desc.ts"
 
-export const router = new Router();
+import { logout } from "../controllers/log-out.ts";
 
-interface TimeInterface {
-  time: Date
-}
+export const router = new Router();
 
 // Admin api endpoints
 router
   .post("/admin", adminLogin) // admin log in
   .put("/admin", adminUpdate) // update admin data
-  .put("/admin/:field", () => { }) // update admin username, password and email information
+  .put("/admin/:field", adminUpdateCriticalFields) // update admin username, password and email information
 
 // verify administrative login
 router
@@ -29,14 +33,14 @@ router
 
 // Assistans api endpoints
 router
-  .post("/assistant", assistantLogin) // assistant log in
-  .put("/assistant", assistantUpdate) // update assistant data
-  .put("/assistant/:field", () => { }) // update assistant username, password and email information
+  .post("/scheduler", schedulerLogin) // scheduler log in
+  .put("/scheduler", schedulerUpdate) // update scheduler data
+  .put("/scheduler/:field", schedulerUpdateCriticalFields) // update scheduler username, password and email information
 
 // Cadets api endpoints
 router
   .post("/cadet", cadetLogin) // cadet login
-  .post("/cadet", cadetLogin) // update cadet data
+  .put("/cadet", () => { }) // update cadet data
   .post("/cadet/:field", () => { }) // cadet update username, password and email information
 
 // services api endpoints

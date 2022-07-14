@@ -1,11 +1,12 @@
-import { Context, verifyJwt } from "../deps.ts";
+import { Context, verifyJwt, Bson } from "../deps.ts";
 import db from "../utils/db.ts";
 import { privateKey } from "../constants.ts";
 import { AdminSchema } from "../types.d.ts";
+import { TokenData } from "./controllers.types.d.ts";
 
 export const administrativeLogin = async ({ response, cookies }: Context) => {
   // Taking the cookie
-  const token = await cookies.get("untk");
+  const token = await cookies.get("untkad", { signed: true });
 
   // setting the response status and response type
   response.status = 401;
@@ -18,17 +19,18 @@ export const administrativeLogin = async ({ response, cookies }: Context) => {
     }
 
     // verifying the token
-    const { role, username } = (await verifyJwt(token, privateKey)).payload as unknown as Partial<AdminSchema>;
+    const { role, _id, isLoggedIn } = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
-    // If user role is admin, allocator or cadet, then continue...
-    if (role === "admin" || role === "asignador" || role === "agendador") {
-      const collection: string = role === "admin" ? "admins" : "assistants";
+    // if user is not logged in, return error
+    if (!isLoggedIn) throw new Error("You do not have permission to access this resource.");
+
+    // If user role is admin, or scheduler, then continue...
+    if (role === "admin" || role === "agendador") {
+      const collection = role === "admin" ? "admins" : "schedulers";
 
       // connecting to DB and consulting data
       const user = db.collection<AdminSchema>(collection);
-      const user_data = await user.findOne({
-        username: username,
-      }) as Partial<AdminSchema>;
+      const user_data = await user.findOne({ _id: new Bson.ObjectId(_id) }) as Partial<AdminSchema>;
 
       // Deleting password for admin
       delete user_data.password;

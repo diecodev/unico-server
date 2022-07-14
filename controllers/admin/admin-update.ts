@@ -2,10 +2,11 @@ import db from "../../utils/db.ts";
 import { AdminSchema } from "../../types.d.ts";
 import { privateKey, options } from "../../constants.ts";
 import { Context, signJwt, verifyJwt } from "../../deps.ts";
+import { TokenData } from "../controllers.types.d.ts";
 
 export const adminUpdate = async ({ request, response, cookies }: Context) => {
   // Taking the cookie
-  const token = await cookies.get("untk");
+  const token = await cookies.get("untkad", { signed: true });
 
   // setting response type to json and error status to 403
   response.type = "application/json";
@@ -24,21 +25,19 @@ export const adminUpdate = async ({ request, response, cookies }: Context) => {
     const data_to_update = await request.body({ type: "json" }).value as Partial<AdminSchema>;
 
     // Verifying the token
-    const payload = (await verifyJwt(token, privateKey)).payload as unknown as Partial<AdminSchema>;
+    const payload = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // if user is not admin, return error
-    if (payload.role !== "admin") throw new Error("You do not have permission execute this action.");
+    if (payload.role !== "admin" || !payload.isLoggedIn) throw new Error("You do not have permission execute this action.");
 
-    if (data_to_update.password || data_to_update.username || data_to_update.email) {
-      delete data_to_update.password;
-      delete data_to_update.username;
-      delete data_to_update.email;
-    }
+    delete data_to_update.password;
+    delete data_to_update.username;
+    delete data_to_update.email;
 
     // Connecting to DB and updating data
     const admin = db.collection<AdminSchema>("admins");
     const admin_updated = await admin.updateOne(
-      { username: payload.username },
+      { _id: payload._id },
       { $set: { ...data_to_update } },
     );
 
@@ -46,10 +45,16 @@ export const adminUpdate = async ({ request, response, cookies }: Context) => {
     if (!admin_updated.modifiedCount) throw new Error("No data found.");
 
     // If admin is updated, return new admin data...
-    const new_admin = await admin.findOne({ username: payload.username });
+    const new_admin = await admin.findOne({ _id: payload._id }) as AdminSchema;
+
+    const jwt_data = {
+      role: new_admin.role,
+      _id: new_admin._id,
+      isLoggedIn: true,
+    }
 
     // If everything is fine, create a new token and return the new data
-    const new_token = await new signJwt({ ...new_admin }).setProtectedHeader({ alg: "HS256" }).sign(privateKey)
+    const new_token = await new signJwt(jwt_data).setProtectedHeader({ alg: "HS256" }).sign(privateKey)
 
     /*
       PARA MAÑANA:
@@ -61,7 +66,7 @@ export const adminUpdate = async ({ request, response, cookies }: Context) => {
     // If everything is ok, return the new data
     response.status = 200;
     response.body = { data: new_admin };
-    cookies.set("untk", new_token, options);
+    await cookies.set("untkad", new_token, options);
     return;
   } catch (error) {
     // If there is an error, return error

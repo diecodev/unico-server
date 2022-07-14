@@ -5,7 +5,7 @@ import { privateKey } from '../../constants.ts';
 import { getIntervals } from "../../utils/get-intervals.ts"
 
 export const servicesByDateAscendig = async ({ cookies, response }: Context) => {
-  const token = await cookies.get('untk');
+  const token = await cookies.get('untkad', { signed: true });
 
   response.status = 401;
   response.type = 'application/json';
