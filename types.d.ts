@@ -2,7 +2,7 @@ import { Bson } from "./deps.ts";
 
 // admin, allocator, scheduler, cadet, client
 type ServiceStatus = 'nuevo' | 'por retirar' | 'por entregar' | 'terminado';
-type Models = 'admins' | 'assistants' | 'cadets' | 'clients' | 'services';
+type Models = 'admins' | 'schedulers' | 'cadets' | 'clients' | 'services';
 type Role = "admin" | "asignador" | "agendador" | "cadete" | "cliente";
 type ServiceType = 'Flex' | 'e-Commerce' | 'Express' | 'Correo' | 'Resmis/Flete';
 type PaymentMethod = "Efectivo" | "Transferencia";
