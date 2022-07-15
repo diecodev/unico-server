@@ -1,5 +1,5 @@
 export { Application, Context, Router } from "https://deno.land/x/oak@v10.6.0/mod.ts";
-export type { CookiesSetDeleteOptions } from "https://deno.land/x/oak@v10.6.0/mod.ts";
+export type { CookiesSetDeleteOptions, RouterContext } from "https://deno.land/x/oak@v10.6.0/mod.ts";
 
 export { Bson, MongoClient } from "https://deno.land/x/mongo@v0.30.1/mod.ts";
 
