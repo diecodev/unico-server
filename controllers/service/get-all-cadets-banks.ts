@@ -1,27 +1,27 @@
-import { RouterContext, verifyJwt, Bson } from "../../deps.ts";
-import db from "../../utils/db.ts";
-import { privateKey } from "../../constants.ts";
-import { ServiceSchema } from "../../types.d.ts";
-import { TokenData } from "../controllers.types.d.ts";
-import { getIntervals } from "../../utils/get-intervals.ts";
+import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
+import db from '../../utils/db.ts';
+import { privateKey } from '../../constants.ts';
+import { ServiceSchema } from '../../types.d.ts';
+import { TokenData } from '../controllers.types.d.ts';
+import { getIntervals } from '../../utils/get-intervals.ts';
 
-export const getAllCadetsBanks = async ({ response, cookies, params }: RouterContext<"/services/banks/:id">) => {
+export const getAllCadetsBanks = async ({ response, cookies, params }: RouterContext<'/services/banks/:id'>) => {
   // Taking the cookie
-  const token = await cookies.get("untkac", { signed: true });
+  const token = await cookies.get('untkac', { signed: true });
 
   // setting the response status and response type
   response.status = 401;
-  response.type = "application/json";
+  response.type = 'application/json';
 
   try {
     // if request do not have cookies, return error
-    if (!token) throw new Error("You do not have permission to access this resource.");
+    if (!token) throw new Error('You do not have permission to access this resource.');
 
     // verifying the token
     const { role, isLoggedIn } = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // if user is not logged in or user role is not cadet, return error
-    if (!isLoggedIn || role !== 'cadet') throw new Error("You do not have permission to access this resource.");
+    if (!isLoggedIn || role !== 'cadet') throw new Error('You do not have permission to access this resource.');
 
     // if user is a scheduler, continue...
     const model = db.collection<ServiceSchema>('services');

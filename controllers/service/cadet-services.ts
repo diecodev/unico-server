@@ -1,11 +1,11 @@
-import { RouterContext, verifyJwt, Bson } from "../../deps.ts";
-import { TokenData } from "../controllers.types.d.ts"
-import { ServiceSchema } from "../../types.d.ts";
-import { privateKey } from "../../constants.ts";
-import { getIntervals } from "../../utils/get-intervals.ts"
-import db from "../../utils/db.ts";
+import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
+import { TokenData } from '../controllers.types.d.ts'
+import { ServiceSchema } from '../../types.d.ts';
+import { privateKey } from '../../constants.ts';
+import { getIntervals } from '../../utils/get-intervals.ts'
+import db from '../../utils/db.ts';
 
-export const cadetsServices = async ({ response, params, cookies }: RouterContext<"/services/cadet/:id/:sort">) => {
+export const cadetsServices = async ({ response, params, cookies }: RouterContext<'/services/cadet/:id/:sort'>) => {
   const { sort } = params;
   const id = new Bson.ObjectId(params.id);
 
@@ -13,7 +13,7 @@ export const cadetsServices = async ({ response, params, cookies }: RouterContex
 
   //setting the response type and status.
   response.status = 401;
-  response.type = "application/json";
+  response.type = 'application/json';
   try {
     // if there is not token or if sort is diff than asc or desc, return error.
     if (!token || (sort !== 'asc' && sort !== 'desc')) throw new Error('You have not access to this resource.');
@@ -51,33 +51,33 @@ export const cadetsServices = async ({ response, params, cookies }: RouterContex
       },
       {
         $unset: [
-          "delivered_by.password",
-          "delivered_by.email",
-          "delivered_by.username",
-          "delivered_by.profile_picture",
-          "delivered_by.balance",
-          "delivered_by.address",
-          "delivered_by.phone",
-          "delivered_by.is_active",
-          "delivered_by.dni",
-          "delivered_by.patent",
-          "delivered_by.dni_frontal_picture",
-          "delivered_by.dni_back_picture",
-          "delivered_by.vehicle_picture",
+          'delivered_by.password',
+          'delivered_by.email',
+          'delivered_by.username',
+          'delivered_by.profile_picture',
+          'delivered_by.balance',
+          'delivered_by.address',
+          'delivered_by.phone',
+          'delivered_by.is_active',
+          'delivered_by.dni',
+          'delivered_by.patent',
+          'delivered_by.dni_frontal_picture',
+          'delivered_by.dni_back_picture',
+          'delivered_by.vehicle_picture',
 
-          "picked_up_by.password",
-          "picked_up_by.email",
-          "picked_up_by.username",
-          "picked_up_by.profile_picture",
-          "picked_up_by.balance",
-          "picked_up_by.address",
-          "picked_up_by.phone",
-          "picked_up_by.is_active",
-          "picked_up_by.dni",
-          "picked_up_by.patent",
-          "picked_up_by.dni_frontal_picture",
-          "picked_up_by.dni_back_picture",
-          "picked_up_by.vehicle_picture",
+          'picked_up_by.password',
+          'picked_up_by.email',
+          'picked_up_by.username',
+          'picked_up_by.profile_picture',
+          'picked_up_by.balance',
+          'picked_up_by.address',
+          'picked_up_by.phone',
+          'picked_up_by.is_active',
+          'picked_up_by.dni',
+          'picked_up_by.patent',
+          'picked_up_by.dni_frontal_picture',
+          'picked_up_by.dni_back_picture',
+          'picked_up_by.vehicle_picture',
         ]
       },
       {

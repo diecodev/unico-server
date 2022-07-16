@@ -1,13 +1,13 @@
-import { SchedulerSchema, CadetSchema, ClientSchema } from "../types.d.ts";
-import { encryptPassword } from "../constants.ts";
-import db from "./db.ts";
+import { SchedulerSchema, CadetSchema, ClientSchema } from '../types.d.ts';
+import { encryptPassword } from '../constants.ts';
+import db from './db.ts';
 
 export const insertScheduler = async (data: SchedulerSchema) => {
-  const scheduler_collection = db.collection<SchedulerSchema>("schedulers");
+  const scheduler_collection = db.collection<SchedulerSchema>('schedulers');
 
   const scheduler_exists = await scheduler_collection.findOne({ username: data.username, $or: [{ email: data.email }, { phone: data.phone }] });
 
-  if (scheduler_exists) throw new Error("The scheduler already exists.");
+  if (scheduler_exists) throw new Error('The scheduler already exists.');
 
   const encrypted_password = encryptPassword(data.password);
 
@@ -23,11 +23,11 @@ export const insertScheduler = async (data: SchedulerSchema) => {
 }
 
 export const insertCadet = async (data: CadetSchema) => {
-  const cadet_collection = db.collection<CadetSchema>("cadets");
+  const cadet_collection = db.collection<CadetSchema>('cadets');
 
   const cadet_exists = await cadet_collection.findOne({ username: data.username, $or: [{ email: data.email }, { phone: data.phone }, { dni: data.dni }, { patent: data.patent }] });
 
-  if (cadet_exists) throw new Error("The cadet already exists.");
+  if (cadet_exists) throw new Error('The cadet already exists.');
 
   const encrypted_password = encryptPassword(data.password);
 
@@ -43,11 +43,11 @@ export const insertCadet = async (data: CadetSchema) => {
 }
 
 export const insertClient = async (data: ClientSchema) => {
-  const client_collection = db.collection<ClientSchema>("clients");
+  const client_collection = db.collection<ClientSchema>('clients');
 
   const client_exists = await client_collection.findOne({ username: data.username, $or: [{ email: data.email }, { phone: data.phone }] });
 
-  if (client_exists) throw new Error("The client already exists.");
+  if (client_exists) throw new Error('The client already exists.');
 
   const encrypted_password = encryptPassword(data.password);
 

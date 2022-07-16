@@ -1,9 +1,9 @@
-import db from "./db.ts";
+import db from './db.ts';
 import { Bson } from '../deps.ts';
 import { CadetSchema, ClientSchema, SchedulerSchema } from '../types.d.ts'
 
 interface IParams {
-  model: "schedulers" | "cadets" | "clients";
+  model: 'schedulers' | 'cadets' | 'clients';
   body: Partial<CadetSchema | ClientSchema | SchedulerSchema>;
   id: Bson.ObjectId
 }

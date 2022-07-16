@@ -1,11 +1,11 @@
-import { Bson } from "./deps.ts";
+import { Bson } from './deps.ts';
 
 // admin, allocator, scheduler, cadet, client
 type ServiceStatus = 'nuevo' | 'por retirar' | 'por entregar' | 'terminado';
 type Models = 'admins' | 'schedulers' | 'cadets' | 'clients' | 'services';
-type Role = "admin" | "asignador" | "agendador" | "cadete" | "cliente";
+type Role = 'admin' | 'asignador' | 'agendador' | 'cadete' | 'cliente';
 type ServiceType = 'Flex' | 'e-Commerce' | 'Express' | 'Correo' | 'Resmis/Flete';
-type PaymentMethod = "Efectivo" | "Transferencia";
+type PaymentMethod = 'Efectivo' | 'Transferencia';
 type PaymentStatus = 'pagado' | 'no pagado';
 
 export type Schedule = {
@@ -39,7 +39,7 @@ export interface CadetSchema extends SchedulerSchema {
   vehicle_picture: string;
 }
 
-export interface ClientSchema extends Omit<SchedulerSchema, "email"> {
+export interface ClientSchema extends Omit<SchedulerSchema, 'email'> {
   payment_method: PaymentMethod;
   schedule?: Schedule;
   enterprise?: string;

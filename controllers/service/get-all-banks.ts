@@ -1,29 +1,29 @@
-import { Context, verifyJwt } from "../../deps.ts";
-import db from "../../utils/db.ts";
-import { privateKey } from "../../constants.ts";
-import { ServiceSchema } from "../../types.d.ts";
-import { TokenData } from "../controllers.types.d.ts";
+import { Context, verifyJwt } from '../../deps.ts';
+import db from '../../utils/db.ts';
+import { privateKey } from '../../constants.ts';
+import { ServiceSchema } from '../../types.d.ts';
+import { TokenData } from '../controllers.types.d.ts';
 
 export const getAllBanks = async ({ response, cookies }: Context) => {
   // Taking the cookie
-  const token = await cookies.get("untkad", { signed: true });
+  const token = await cookies.get('untkad', { signed: true });
 
   // setting the response status and response type
   response.status = 401;
-  response.type = "application/json";
+  response.type = 'application/json';
 
   try {
     // if request do not have cookies, return error
-    if (!token) throw new Error("You do not have permission to access this resource.");
+    if (!token) throw new Error('You do not have permission to access this resource.');
 
     // verifying the token
     const { role, isLoggedIn } = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // if user is not logged in, return error
-    if (!isLoggedIn) throw new Error("You do not have permission to access this resource.");
+    if (!isLoggedIn) throw new Error('You do not have permission to access this resource.');
 
     // If user role is not scheduler, then return error
-    if (role !== 'agendador' && role !== 'admin') throw new Error("You do not have permission to access this resource.");
+    if (role !== 'agendador' && role !== 'admin') throw new Error('You do not have permission to access this resource.');
 
     // if user is a scheduler, continue...
     const model = db.collection<ServiceSchema>('services');
@@ -61,19 +61,19 @@ export const getAllBanks = async ({ response, cookies }: Context) => {
       },
       {
         $unset: [
-          "return_collected_money_to.password",
-          "return_collected_money_to.email",
-          "return_collected_money_to.username",
-          "return_collected_money_to.profile_picture",
-          "return_collected_money_to.balance",
-          "return_collected_money_to.address",
-          "return_collected_money_to.phone",
-          "return_collected_money_to.is_active",
-          "return_collected_money_to.dni",
-          "return_collected_money_to.patent",
-          "return_collected_money_to.dni_frontal_picture",
-          "return_collected_money_to.dni_back_picture",
-          "return_collected_money_to.vehicle_picture",
+          'return_collected_money_to.password',
+          'return_collected_money_to.email',
+          'return_collected_money_to.username',
+          'return_collected_money_to.profile_picture',
+          'return_collected_money_to.balance',
+          'return_collected_money_to.address',
+          'return_collected_money_to.phone',
+          'return_collected_money_to.is_active',
+          'return_collected_money_to.dni',
+          'return_collected_money_to.patent',
+          'return_collected_money_to.dni_frontal_picture',
+          'return_collected_money_to.dni_back_picture',
+          'return_collected_money_to.vehicle_picture',
         ]
       }
     ]).toArray();

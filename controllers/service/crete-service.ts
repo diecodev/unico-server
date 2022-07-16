@@ -1,9 +1,9 @@
-import { isAnService } from "../../utils/interfaces-validator.ts";
-import { TokenData } from "../controllers.types.d.ts"
-import { Context, verifyJwt, Bson } from "../../deps.ts";
-import { ServiceSchema } from "../../types.d.ts";
-import { privateKey } from "../../constants.ts"
-import db from "../../utils/db.ts";
+import { isAnService } from '../../utils/interfaces-validator.ts';
+import { TokenData } from '../controllers.types.d.ts'
+import { Context, verifyJwt, Bson } from '../../deps.ts';
+import { ServiceSchema } from '../../types.d.ts';
+import { privateKey } from '../../constants.ts'
+import db from '../../utils/db.ts';
 
 export const createService = async ({ request, response, cookies }: Context) => {
   // gettinf the token from the cookies
@@ -11,17 +11,17 @@ export const createService = async ({ request, response, cookies }: Context) => 
 
   // setting response status and content type
   response.status = 401;
-  response.type = "application/json";
+  response.type = 'application/json';
 
   try {
     // if there is no token, throw an error
-    if (!token) throw new Error("No token found");
+    if (!token) throw new Error('No token found');
 
     // Decoding the token
     const payload = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // is role is not scheduler, throw an error
-    if (payload.role !== "agendador") throw new Error("You are not authorized to perform this action");
+    if (payload.role !== 'agendador') throw new Error('You are not authorized to perform this action');
 
     // getting the body of the request
     const body = await request.body({ type: 'json' }).value as ServiceSchema;
@@ -35,10 +35,10 @@ export const createService = async ({ request, response, cookies }: Context) => 
     const is_valid = isAnService(body)
 
     // if body is not a service object, throw an error
-    if (!is_valid) throw new Error("Invalid data");
+    if (!is_valid) throw new Error('Invalid data');
 
     // insert the service into the database
-    const model = db.collection<ServiceSchema>("services");
+    const model = db.collection<ServiceSchema>('services');
     const new_service = await model.insertOne({ ...body, client_id, scheduled_by, date_of_service });
     const service = await model.findOne({ _id: new_service });
 

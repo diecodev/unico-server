@@ -1,26 +1,26 @@
-import { TokenData } from "../controllers.types.d.ts"
-import { RouterContext, verifyJwt, Bson } from "../../deps.ts";
-import { ServiceSchema } from "../../types.d.ts";
-import { privateKey } from "../../constants.ts"
-import db from "../../utils/db.ts";
+import { TokenData } from '../controllers.types.d.ts'
+import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
+import { ServiceSchema } from '../../types.d.ts';
+import { privateKey } from '../../constants.ts'
+import db from '../../utils/db.ts';
 
-export const updateService = async ({ request, response, cookies, params }: RouterContext<"/services/:id">) => {
+export const updateService = async ({ request, response, cookies, params }: RouterContext<'/services/:id'>) => {
   // gettinf the token from the cookies
   const token = await cookies.get('untkad', { signed: true });
 
   // setting response status and content type
   response.status = 401;
-  response.type = "application/json";
+  response.type = 'application/json';
 
   try {
     // if there is no token, throw an error
-    if (!token) throw new Error("No token found");
+    if (!token) throw new Error('No token found');
 
     // Decoding the token
     const payload = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // is role is not scheduler, throw an error
-    if (payload.role !== "agendador") throw new Error("You are not authorized to perform this action");
+    if (payload.role !== 'agendador') throw new Error('You are not authorized to perform this action');
 
     // getting the body of the request
     const body = await request.body({ type: 'json' }).value as ServiceSchema;
@@ -34,12 +34,12 @@ export const updateService = async ({ request, response, cookies, params }: Rout
     const _id = new Bson.ObjectId(params.id);
 
     // insert the service into the database
-    const model = db.collection<ServiceSchema>("services");
+    const model = db.collection<ServiceSchema>('services');
     const updated_service = await model.findAndModify({ _id }, { update: { $set: { ...body, client_id, date_of_service, delivered_by, picked_up_by, return_collected_money_to } }, new: true });
     console.log(updated_service)
 
     // if there is no service, throw an error
-    if (!updated_service) throw new Error("Service not found");
+    if (!updated_service) throw new Error('Service not found');
 
     response.status = 201;
     response.body = { data: updated_service };

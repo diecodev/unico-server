@@ -2,9 +2,9 @@ import type { AdminSchema, ServiceSchema } from '../../types.d.ts';
 import db from '../../utils/db.ts'
 import { RouterContext, verifyJwt } from '../../deps.ts';
 import { privateKey } from '../../constants.ts';
-import { getIntervals } from "../../utils/get-intervals.ts";
+import { getIntervals } from '../../utils/get-intervals.ts';
 
-export const getServicesSorted = async ({ cookies, response, params }: RouterContext<"/services/:sort">) => {
+export const getServicesSorted = async ({ cookies, response, params }: RouterContext<'/services/:sort'>) => {
   const token = await cookies.get('untkad', { signed: true });
 
   response.status = 401;
@@ -44,33 +44,33 @@ export const getServicesSorted = async ({ cookies, response, params }: RouterCon
       },
       {
         $unset: [
-          "delivered_by.password",
-          "delivered_by.email",
-          "delivered_by.username",
-          "delivered_by.profile_picture",
-          "delivered_by.balance",
-          "delivered_by.address",
-          "delivered_by.phone",
-          "delivered_by.is_active",
-          "delivered_by.dni",
-          "delivered_by.patent",
-          "delivered_by.dni_frontal_picture",
-          "delivered_by.dni_back_picture",
-          "delivered_by.vehicle_picture",
+          'delivered_by.password',
+          'delivered_by.email',
+          'delivered_by.username',
+          'delivered_by.profile_picture',
+          'delivered_by.balance',
+          'delivered_by.address',
+          'delivered_by.phone',
+          'delivered_by.is_active',
+          'delivered_by.dni',
+          'delivered_by.patent',
+          'delivered_by.dni_frontal_picture',
+          'delivered_by.dni_back_picture',
+          'delivered_by.vehicle_picture',
 
-          "picked_up_by.password",
-          "picked_up_by.email",
-          "picked_up_by.username",
-          "picked_up_by.profile_picture",
-          "picked_up_by.balance",
-          "picked_up_by.address",
-          "picked_up_by.phone",
-          "picked_up_by.is_active",
-          "picked_up_by.dni",
-          "picked_up_by.patent",
-          "picked_up_by.dni_frontal_picture",
-          "picked_up_by.dni_back_picture",
-          "picked_up_by.vehicle_picture",
+          'picked_up_by.password',
+          'picked_up_by.email',
+          'picked_up_by.username',
+          'picked_up_by.profile_picture',
+          'picked_up_by.balance',
+          'picked_up_by.address',
+          'picked_up_by.phone',
+          'picked_up_by.is_active',
+          'picked_up_by.dni',
+          'picked_up_by.patent',
+          'picked_up_by.dni_frontal_picture',
+          'picked_up_by.dni_back_picture',
+          'picked_up_by.vehicle_picture',
         ]
       },
       {
