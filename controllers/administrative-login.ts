@@ -14,9 +14,7 @@ export const administrativeLogin = async ({ response, cookies }: Context) => {
 
   try {
     // if request do not have cookies, return error
-    if (!token) {
-      throw new Error("You do not have permission to access this resource.");
-    }
+    if (!token) throw new Error("You do not have permission to access this resource.");
 
     // verifying the token
     const { role, _id, isLoggedIn } = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
@@ -42,7 +40,6 @@ export const administrativeLogin = async ({ response, cookies }: Context) => {
     }
 
     // If user role is not admin, allocator or cadet, then return error
-
     throw new Error("You do not have permission to access this resource.");
 
     // If token is not valid, return error

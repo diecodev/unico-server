@@ -1,17 +1,16 @@
-import type { AdminSchema, SchedulerSchema, CadetSchema, ClientSchema } from "../types.d.ts";
+import type { SchedulerSchema, CadetSchema, ClientSchema } from "../types.d.ts";
 import { isAnScheduler, isAnCadet, isAnClient } from "../utils/interfaces-validator.ts"
 import { insertScheduler, insertClient, insertCadet } from "../utils/insert-users.ts"
-import { Context, verifyJwt } from "../deps.ts";
+import { RouterContext, verifyJwt } from "../deps.ts";
 import { TokenData } from "./controllers.types.d.ts"
 import { privateKey } from "../constants.ts";
 
-export const adminRegisterUsers = async ({ request, response, cookies }: Context) => {
+export const adminRegisterUsers = async ({ request, response, cookies, params }: RouterContext<"/unico/register/:role">) => {
   // taking the url from request and the token from cookies
-  const url = new URL(String(request.url));
   const token = await cookies.get("untkad", { signed: true });
 
   // taking the role that is required to register
-  const role_to_register = url.pathname.split("/")[2];
+  const role_to_register = params.role;
 
   // setting response type and status code
   response.type = "application/json";
