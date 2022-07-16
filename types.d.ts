@@ -48,13 +48,11 @@ export interface ClientSchema extends Omit<SchedulerSchema, "email"> {
 }
 
 export interface ServiceSchema {
+  _id: Bson.ObjectId;
   client_id: Bson.ObjectId; // cleint id to populate info
-  delivered_by?: Bson.ObjectId | Partial<AdminSchema> | Partial<SchedulerSchema> | Partial<CadetSchema>;
-  delivered_by_model?: string;
-  picked_up_by?: Bson.ObjectId | Partial<AdminSchema> | Partial<SchedulerSchema> | Partial<CadetSchema>;
-  picked_up_by_model?: string;
-  scheduled_by: Bson.ObjectId | Partial<AdminSchema> | Partial<SchedulerSchema> | Partial<CadetSchema>;
-  scheduled_by_model: string;
+  delivered_by?: Bson.ObjectId;
+  picked_up_by?: Bson.ObjectId;
+  scheduled_by: Bson.ObjectId;
   origin_address: string;
   origin_address_details?: string;
   destination_address: string;
@@ -70,8 +68,7 @@ export interface ServiceSchema {
   // recibir dinero en destino para devovler
   collect_money: boolean;
   collect_money_amount?: number;
-  return_collected_money_to?: Bson.ObjectId | Partial<AdminSchema> | Partial<SchedulerSchema> | Partial<CadetSchema>;
-  return_collected_money_to_model?: string;
+  return_collected_money_to?: Bson.ObjectId;
   // contraentrega (pago del servicio en destino)
   upon_delivery: boolean;
   payment_method: PaymentMethod;
