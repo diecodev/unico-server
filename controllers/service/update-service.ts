@@ -1,4 +1,3 @@
-import { isAnService } from "../../utils/interfaces-validator.ts";
 import { TokenData } from "../controllers.types.d.ts"
 import { RouterContext, verifyJwt, Bson } from "../../deps.ts";
 import { ServiceSchema } from "../../types.d.ts";
@@ -21,7 +20,7 @@ export const updateService = async ({ request, response, cookies, params }: Rout
     const payload = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // is role is not scheduler, throw an error
-    // if (payload.role !== "agendador") throw new Error("You are not authorized to perform this action");
+    if (payload.role !== "agendador") throw new Error("You are not authorized to perform this action");
 
     // getting the body of the request
     const body = await request.body({ type: 'json' }).value as ServiceSchema;
