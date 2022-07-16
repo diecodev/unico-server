@@ -54,14 +54,7 @@ export const adminUpdate = async ({ request, response, cookies }: Context) => {
     }
 
     // If everything is fine, create a new token and return the new data
-    const new_token = await new signJwt(jwt_data).setProtectedHeader({ alg: "HS256" }).sign(privateKey)
-
-    /*
-      PARA MAÑANA:
-        - Crear un endpoint para cambiar el usuario.
-        - Crear un endpoint para cambiar el email.
-        - Crear un endpoint para cambiar el password.
-    */
+    const new_token = await new signJwt(jwt_data).setProtectedHeader({ alg: "HS256" }).sign(privateKey);
 
     // If everything is ok, return the new data
     response.status = 200;

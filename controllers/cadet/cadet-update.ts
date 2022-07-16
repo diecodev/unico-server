@@ -5,7 +5,7 @@ import { CadetSchema } from "../../types.d.ts";
 
 export const cadetUpdate = async ({ request, response, cookies }: Context) => {
   // Taking the cookie
-  const token = await cookies.get("untk", { signed: true });
+  const token = await cookies.get("untkca", { signed: true });
 
   // setting response to json and status code to 403
   response.type = "application/json";
@@ -13,9 +13,7 @@ export const cadetUpdate = async ({ request, response, cookies }: Context) => {
 
   try {
     // if request do not have cookies, return error
-    if (!token) {
-      throw new Error("You do not have permission to access this resource.");
-    }
+    if (!token) throw new Error("You do not have permission to access this resource.");
 
     // verifying the token
     const payload = (await verifyJwt(token, privateKey)).payload as unknown as Partial<CadetSchema>;
@@ -26,11 +24,9 @@ export const cadetUpdate = async ({ request, response, cookies }: Context) => {
     // Taking the body of the request
     const data_to_update = await request.body({ type: "json" }).value as Partial<CadetSchema>;
 
-    if (data_to_update.password || data_to_update.username || data_to_update.email) {
-      delete data_to_update.password;
-      delete data_to_update.username;
-      delete data_to_update.email;
-    }
+    delete data_to_update.password;
+    delete data_to_update.username;
+    delete data_to_update.email;
 
     // connecting to DB and updating data
     const cadet = db.collection<CadetSchema>("cadets");
@@ -40,22 +36,13 @@ export const cadetUpdate = async ({ request, response, cookies }: Context) => {
     );
 
     // if cadet does not exist, return error
-    if (!cadet_updated.modifiedCount) {
-      throw new Error("No data found.");
-    }
+    if (!cadet_updated.modifiedCount) throw new Error("No data found.");
 
     // if cadet is updated, return new cadet data...
     const new_cadet = await cadet.findOne({ username: payload.username });
 
     // If everything is fine, create a new token and return the new data
-    const new_token = await new signJwt({ ...new_cadet }).setProtectedHeader({ alg: "HS256" }).sign(privateKey)
-
-    /*
-      PARA MAÑANA:
-        - Crear un endpoint para cambiar el usuario.
-        - Crear un endpoint para cambiar el email.
-        - Crear un endpoint para cambiar el password.
-    */
+    const new_token = await new signJwt({ ...new_cadet }).setProtectedHeader({ alg: "HS256" }).sign(privateKey);
 
     // If everything is ok, return the new data
     response.status = 200;

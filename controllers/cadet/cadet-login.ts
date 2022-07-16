@@ -49,7 +49,7 @@ export const cadetLogin = async ({ request, response, cookies }: Context) => {
       data: cadet_found,
       isLoggedIn: true,
     };
-    await cookies.set("untk", JSON.stringify(token), options);
+    await cookies.set("untkca", token, options);
     return;
   } catch (error) {
     // if login fails, return error

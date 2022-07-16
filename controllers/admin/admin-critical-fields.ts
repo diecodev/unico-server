@@ -39,9 +39,7 @@ export const adminUpdateCriticalFields = async ({ request, response, cookies }: 
     // hashing new password if it is provided
     let new_password: string | undefined = undefined;
 
-    if (password) {
-      new_password = encryptPassword(password);
-    }
+    if (password) new_password = encryptPassword(password);
 
     // updating data
     const admin_updated = await admin.updateOne(
