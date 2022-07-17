@@ -38,8 +38,8 @@ router
 
 // verify administrative login
 router
-  .get('/unico/:role', getRole)
   .get('/unico/verify', administrativeLogin) // validate administrative users login (admins, allocators, schedulers)
+  .get('/unico/:role', getRole)
   .post('/unico/register/:role', adminRegisterUsers) // register users (allocators, schedulers, cadets, clients)
   .put('/unico/update/:role/:id', administrativeUpdateFields)
   .put('/unico/balance/:role/:sort', updateBalance)
