@@ -9,12 +9,12 @@ export const logout = async (context: Context) => {
     return;
   }
 
-  context.cookies.delete('untk', {
+  await context.cookies.set('untk', null, {
     maxAge: -1,
     path: '/',
   });
 
-  context.cookies.delete('untkad', {
+  await context.cookies.set('untkad', null, {
     maxAge: -1,
     path: '/',
   });
