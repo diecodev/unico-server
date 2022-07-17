@@ -8,6 +8,7 @@ import { getRole } from '../controllers/get-role.ts';
 import { administrativeLogin } from '../controllers/administrative-login.ts';
 import { adminRegisterUsers } from '../controllers/administrative-register-users.ts';
 import { administrativeUpdateFields } from '../controllers/administrative-update-fields.ts';
+import { updateBalance } from '../controllers/update-balance.ts';
 
 import { schedulerLogin } from '../controllers/scheduler/scheduler-login.ts'
 import { schedulerUpdate } from '../controllers/scheduler/scheduler-update.ts'
@@ -41,6 +42,7 @@ router
   .get('/unico//verify/', administrativeLogin) // validate administrative users login (admins, allocators, schedulers)
   .post('/unico/register/:role', adminRegisterUsers) // register users (allocators, schedulers, cadets, clients)
   .put('/unico/update/:role/:id', administrativeUpdateFields)
+  .put('/unico/balance/:role/:sort', updateBalance)
 
 // Scheduler api endpoints
 router
