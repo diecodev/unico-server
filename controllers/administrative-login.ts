@@ -7,7 +7,6 @@ import { TokenData } from './controllers.types.d.ts';
 export const administrativeLogin = async ({ response, cookies }: Context) => {
   // Taking the cookie
   const token = await cookies.get('untkad', { signed: true });
-  console.log('entró');
 
   // setting the response status and response type
   response.status = 401;
