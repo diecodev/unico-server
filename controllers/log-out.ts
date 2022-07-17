@@ -12,11 +12,13 @@ export const logout = async (context: Context) => {
   await context.cookies.set('untk', null, {
     maxAge: -1,
     path: '/',
+    signed: true,
   });
 
   await context.cookies.set('untkad', null, {
     maxAge: -1,
     path: '/',
+    signed: true,
   });
   context.response.status = 200;
   context.response.body = {
