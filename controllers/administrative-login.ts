@@ -36,7 +36,7 @@ export const administrativeLogin = async ({ response, cookies }: Context) => {
 
       // returning the data
       response.status = 200;
-      response.body = { data: user_data };
+      response.body = { data: user_data, isLoggedIn };
       return;
     }
 
