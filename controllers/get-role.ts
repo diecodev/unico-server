@@ -4,7 +4,7 @@ import { privateKey } from '../constants.ts';
 import { AdminSchema } from '../types.d.ts';
 import { TokenData } from './controllers.types.d.ts';
 
-export const getRole = async ({ response, cookies, params }: RouterContext<'/unico/:role'>) => {
+export const getRole = async ({ response, cookies, params }: RouterContext<'/unico/employees/:role'>) => {
   // Taking the cookie
   const token = await cookies.get('untkad', { signed: true });
 
