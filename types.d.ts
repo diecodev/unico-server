@@ -77,3 +77,9 @@ export interface ServiceSchema {
   service_type: ServiceType;
   payment_of_delivery_cadet?: number; // If the service is delivered and picked up by different cadets, this is delivery cadet payment amount.
 }
+
+export interface EventDataProps {
+  action: 'add' | 'remove' | 'update';
+  service: ServiceSchema;
+  serviceList: ServiceSchema[];
+}

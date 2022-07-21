@@ -4,7 +4,7 @@ export const getIntervals = (increment = true) => {
     timeZone: 'America/Argentina/Buenos_Aires',
   });
 
-  const asc_or_desc = date.getDate() + (increment ? 6 : -6);
+  const asc_or_desc = date.getDate() + (increment ? 7 : -7);
 
   const date_two = new Date(date.setDate(asc_or_desc));
   const new_last_date = date_two.toLocaleString('en-US', {

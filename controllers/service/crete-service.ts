@@ -2,7 +2,7 @@ import { isAnService } from '../../utils/interfaces-validator.ts';
 import { TokenData } from '../controllers.types.d.ts'
 import { Context, verifyJwt, Bson } from '../../deps.ts';
 import { ServiceSchema } from '../../types.d.ts';
-import { privateKey } from '../../constants.ts'
+import { privateKey, populateServiceOptions } from '../../constants.ts'
 import db from '../../utils/db.ts';
 
 export const createService = async ({ request, response, cookies }: Context) => {
@@ -37,14 +37,36 @@ export const createService = async ({ request, response, cookies }: Context) => 
     // if body is not a service object, throw an error
     if (!is_valid) throw new Error('Invalid data');
 
+    const client_channel = new BroadcastChannel(`client-${body.client_id}`);
+    const general_channel = new BroadcastChannel('global-services');
+
     // insert the service into the database
     const model = db.collection<ServiceSchema>('services');
     const new_service = await model.insertOne({ ...body, client_id, scheduled_by, date_of_service });
-    const service = await model.findOne({ _id: new_service });
 
-    // return the new service
+    // getting the inserted service poopulated with client data
+    const service_populated = await model.aggregate([
+      { $match: { _id: new_service } },
+      ...populateServiceOptions
+    ]).toArray() as ServiceSchema[];
+
+    // Taking the inserted service from array
+    const service = service_populated[0];
+
+    // creating the object send to client and global channels
+    const data = {
+      action: 'add',
+      service
+    }
+
+    // sending the data to client channel
+    client_channel.postMessage(JSON.stringify(data));
+    // sending the data to general channel
+    general_channel.postMessage(JSON.stringify(data));
+
+    // return a response to client
     response.status = 201;
-    response.body = { data: service };
+    response.body = { message: 'Service created successfully' };
     return
 
   } catch (error) {

@@ -1,7 +1,7 @@
 import { TokenData } from '../controllers.types.d.ts'
 import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
 import { ServiceSchema } from '../../types.d.ts';
-import { privateKey } from '../../constants.ts'
+import { privateKey, populateServiceOptions } from '../../constants.ts'
 import db from '../../utils/db.ts';
 
 export const updateService = async ({ request, response, cookies, params }: RouterContext<'/services/:id'>) => {
@@ -35,14 +35,48 @@ export const updateService = async ({ request, response, cookies, params }: Rout
 
     // insert the service into the database
     const model = db.collection<ServiceSchema>('services');
-    const updated_service = await model.findAndModify({ _id }, { update: { $set: { ...body, client_id, date_of_service, delivered_by, picked_up_by, return_collected_money_to } }, new: true });
-    console.log(updated_service)
+    const updated_service = await model.findAndModify({ _id }, { update: { $set: { ...body, client_id, date_of_service, delivered_by, picked_up_by, return_collected_money_to } } });
 
     // if there is no service, throw an error
     if (!updated_service) throw new Error('Service not found');
 
+    const client_channel = new BroadcastChannel(`client-${updated_service.client_id}`);
+    const general_channel = new BroadcastChannel('global-services');
+
+    // populating updated service
+    const service_populated = await model.aggregate([
+      { $match: { _id } },
+      ...populateServiceOptions,
+    ]).toArray() as ServiceSchema[];
+
+    // taking service from array
+    const service = service_populated[0];
+
+    // seting data sended to channel
+    const data = {
+      action: 'update',
+      service,
+    }
+
+    // sending data to client channel
+    client_channel.postMessage(JSON.stringify(data));
+    // sending data to general channel
+    general_channel.postMessage(JSON.stringify(data));
+
+    /**
+     * If service was assign to a cadet, send the service to the cadet channel
+     * but, we need to verify if who picked the service is the same who delivered it
+     */
+    if (service?.picked_up_by && service.delivered_by) {
+      const cadet_channel = new BroadcastChannel(`cadet-${service.picked_up_by}`);
+      cadet_channel.postMessage(JSON.stringify(data));
+
+      const cadet_channel_2 = new BroadcastChannel(`cadet-${service.delivered_by}`);
+      (service.delivered_by !== service.picked_up_by) && cadet_channel_2.postMessage(JSON.stringify(data))
+    }
+
     response.status = 201;
-    response.body = { data: updated_service };
+    response.body = { message: 'Service updated successfully' };
     return
 
   } catch (error) {
