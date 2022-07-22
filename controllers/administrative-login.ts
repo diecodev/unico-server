@@ -14,12 +14,10 @@ export const administrativeLogin = async ({ response, cookies }: Context) => {
 
   try {
     // if request do not have cookies, return error
-    console.log({ token })
     if (!token) throw new Error('You do not have permission to access this resource.');
 
     // verifying the token
     const { role, _id, isLoggedIn } = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
-    console.log({ role, _id, isLoggedIn })
 
     // if user is not logged in, return error
     if (!isLoggedIn) throw new Error('You do not have permission to access this resource.');
