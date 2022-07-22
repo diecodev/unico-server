@@ -1,11 +1,13 @@
 import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
 import { TokenData } from '../controllers.types.d.ts'
-import { ServiceSchema, EventDataProps } from '../../types.d.ts';
+import { ServiceSchema } from '../../types.d.ts';
 import { privateKey, populateServiceOptions } from '../../constants.ts';
 import { getIntervals } from '../../utils/get-intervals.ts'
 import db from '../../utils/db.ts';
 
-export const cadetsServices = async ({ response, params, cookies }: RouterContext<'/services/cadet/:id/:sort'>) => {
+export const cadetsServices = async (ctx: RouterContext<'/services/cadet/:id/:sort'>) => {
+  const { response, params, cookies } = ctx;
+
   const { sort } = params;
   const id = new Bson.ObjectId(params.id);
 
@@ -17,6 +19,9 @@ export const cadetsServices = async ({ response, params, cookies }: RouterContex
   try {
     // if there is not token or if sort is diff than asc or desc, return error.
     if (!token || (sort !== 'asc' && sort !== 'desc')) throw new Error('You have not access to this resource.');
+
+    // if request is not a websocket upgrade, return error.
+    if (!ctx.isUpgradable) throw new Error('Unauthorized.');
 
     // if there is a token, verify it.
     const decoded = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
@@ -38,27 +43,26 @@ export const cadetsServices = async ({ response, params, cookies }: RouterContex
 
     const channel = new BroadcastChannel(`cadet-${id}`);
 
-    const stream = new ReadableStream({
-      start: (controller) => {
-        const firstdata = `data: ${JSON.stringify({ services })}\n\n`;
-        controller.enqueue(firstdata);
+    const ws = ctx.upgrade();
 
-        channel.onmessage = (event) => {
-          const dataJSON = JSON.parse(event.data) as EventDataProps;
+    ws.onopen = (_event) => {
+      const data = {
+        action: 'initial',
+        services,
+      };
+      ws.send(JSON.stringify(data));
+    }
 
-          const data = `data: ${JSON.stringify(dataJSON)}\n\n`
-          controller.enqueue(data);
-        }
-      },
+    channel.onmessage = (e) => {
+      ws.send(e.data);
+    };
 
-      cancel() {
-        channel.close();
-      }
-    })
+    ws.onclose = () => {
+      channel.close();
+    };
 
     response.status = 200;
-    response.type = 'text/event-stream';
-    response.body = stream.pipeThrough(new TextEncoderStream());
+    response.body = { message: 'success' };
     return;
 
   } catch (error) {

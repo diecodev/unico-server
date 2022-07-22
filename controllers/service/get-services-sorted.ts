@@ -1,9 +1,11 @@
-import type { AdminSchema, EventDataProps } from '../../types.d.ts';
+import type { AdminSchema } from '../../types.d.ts';
 import { RouterContext, verifyJwt } from '../../deps.ts';
 import { privateKey } from '../../constants.ts';
 import { getEnterpriseServices } from '../../utils/get-enterprise-services.ts';
 
-export const getServicesSorted = async ({ cookies, response, params }: RouterContext<'/services/:sort'>) => {
+export const getServicesSorted = async (ctx: RouterContext<'/services/:sort'>) => {
+  const { cookies, response, params } = ctx;
+
   const token = await cookies.get('untkad', { signed: true });
 
   response.status = 401;
@@ -13,6 +15,7 @@ export const getServicesSorted = async ({ cookies, response, params }: RouterCon
 
   try {
     if (!token || (sort !== 'asc' && sort !== 'desc')) throw new Error('Unauthorized.');
+    if (!ctx.isUpgradable) throw new Error('Unauthorized.');
 
     const decoded_token = (await verifyJwt(token, privateKey)).payload as unknown as AdminSchema;
 
@@ -22,31 +25,26 @@ export const getServicesSorted = async ({ cookies, response, params }: RouterCon
 
     const channel = new BroadcastChannel('global-services');
 
-    const stream = new ReadableStream({
-      start: (controller) => {
-        const data = {
-          action: 'initial',
-          services,
-        }
-        const firstdata = `data: ${JSON.stringify(data)}\n\n`;
-        controller.enqueue(firstdata);
+    const ws = ctx.upgrade();
 
-        channel.onmessage = (event) => {
-          const dataJSON = JSON.parse(event.data) as EventDataProps;
+    ws.onopen = (_event) => {
+      const data = {
+        action: 'initial',
+        services,
+      };
+      ws.send(JSON.stringify(data));
+    }
 
-          const data = `data: ${JSON.stringify(dataJSON)}\n\n`
-          controller.enqueue(data);
-        }
-      },
+    channel.onmessage = (e) => {
+      ws.send(e.data);
+    };
 
-      cancel() {
-        channel.close();
-      }
-    })
+    ws.onclose = () => {
+      channel.close();
+    };
 
     response.status = 200;
-    response.type = 'text/event-stream';
-    response.body = stream.pipeThrough(new TextEncoderStream());
+    response.body = { message: 'success' };
 
   } catch (error) {
     response.body = { error: error.toString() };
