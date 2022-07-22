@@ -93,6 +93,12 @@ export const populateServiceOptions = [
   },
   {
     $unwind: {
+      path: '$client_id',
+      preserveNullAndEmptyArrays: true
+    }
+  },
+  {
+    $unwind: {
       path: '$delivered_by',
       preserveNullAndEmptyArrays: true
     }
