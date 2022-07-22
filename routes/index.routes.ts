@@ -19,7 +19,7 @@ import { cadetUpdate } from '../controllers/cadet/cadet-update.ts';
 import { cadetUpdateCriticalFields } from '../controllers/cadet/cadet-update-critical-fields.ts';
 
 import { getAllBanks } from '../controllers/service/get-all-banks.ts';
-import { createService } from '../controllers/service/crete-service.ts';
+import { createService } from '../controllers/service/create-service.ts';
 import { updateService } from '../controllers/service/update-service.ts';
 import { deleteService } from '../controllers/service/delete-service.ts';
 import { cadetsServices } from '../controllers/service/cadet-services.ts';
@@ -29,6 +29,16 @@ import { getAllCadetsBanks } from '../controllers/service/get-all-cadets-banks.t
 import { logout } from '../controllers/log-out.ts';
 
 export const router = new Router();
+
+// test 
+// router.get('/', async ({ response }) => {
+//   const decoder = new TextDecoder("utf-8");
+//   const bytes = await Deno.readFile("index.html");
+//   const text = decoder.decode(bytes);
+
+//   response.type = "text/html";
+//   response.body = text;
+// })
 
 // Admin api endpoints
 router

@@ -25,7 +25,7 @@ export const getServicesSorted = async ({ cookies, response, params }: RouterCon
     const stream = new ReadableStream({
       start: (controller) => {
         const data = {
-          action: 'inital',
+          action: 'initial',
           services,
         }
         const firstdata = `data: ${JSON.stringify(data)}\n\n`;
