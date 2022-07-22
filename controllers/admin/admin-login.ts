@@ -44,11 +44,11 @@ export const adminLogin = async ({ request, response, cookies }: Context) => {
     // creating the token
     const token = await new signJwt(jwt_data).setProtectedHeader({ alg: 'HS256' }).sign(privateKey);
     response.status = 200;
+    await cookies.set('untkad', token, options);
     response.body = {
       data: admin_found,
       isLoggedIn: true,
     };
-    await cookies.set('untkad', token, options);
     return;
   } catch (error) {
     // If login is not successful, return error

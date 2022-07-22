@@ -44,12 +44,12 @@ export const schedulerLogin = async ({ request, response, cookies }: Context) =>
     // creating the JWT
     const token = await new signJwt(jwt_data).setProtectedHeader({ alg: 'HS256' }).sign(privateKey);
 
+    await cookies.set('untkad', JSON.stringify(token), options);
     response.status = 200;
     response.body = {
       data: scheduler_found,
       isLoggedIn: true,
     };
-    await cookies.set('untkad', JSON.stringify(token), options);
     return;
   } catch (error) {
     // if login fails, return error
