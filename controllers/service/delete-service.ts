@@ -20,13 +20,13 @@ export const deleteService = async ({ response, cookies, params }: RouterContext
     const payload = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // is role is not scheduler, throw an error
-    if (payload.role !== 'agendador') throw new Error('You are not authorized to perform this action.');
+    if (payload.role !== 'agendador' && payload.role !== 'admin') throw new Error('You are not authorized to perform this action.');
 
     // creating the object id's for inserted service
     const _id = new Bson.ObjectId(params.id);
 
     // delete the service into the database
-    const model = db.collection<ServiceSchema>('services.');
+    const model = db.collection<ServiceSchema>('services');
     const service_id = await model.findOne({ _id });
     const new_service = await model.deleteOne({ _id });
 
