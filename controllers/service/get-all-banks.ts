@@ -4,6 +4,7 @@ import { privateKey } from '../../constants.ts';
 import { ServiceSchema } from '../../types.d.ts';
 import { TokenData } from '../controllers.types.d.ts';
 import { getIntervals } from '../../utils/get-intervals.ts';
+import { populateServiceOptions } from '../../constants.ts'
 
 export const getAllBanks = async ({ response, cookies }: Context) => {
   // Taking the cookie
@@ -73,7 +74,8 @@ export const getAllBanks = async ({ response, cookies }: Context) => {
           'return_collected_money_to.dni_back_picture',
           'return_collected_money_to.vehicle_picture',
         ]
-      }
+      },
+      ...populateServiceOptions
     ]).toArray();
 
     response.status = 200;
