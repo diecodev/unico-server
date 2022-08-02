@@ -3,6 +3,7 @@ import db from '../../utils/db.ts';
 import { privateKey } from '../../constants.ts';
 import { ServiceSchema } from '../../types.d.ts';
 import { TokenData } from '../controllers.types.d.ts';
+import { getIntervals } from '../../utils/get-intervals.ts';
 
 export const getAllBanks = async ({ response, cookies }: Context) => {
   // Taking the cookie
@@ -28,17 +29,14 @@ export const getAllBanks = async ({ response, cookies }: Context) => {
     // if user is a scheduler, continue...
     const model = db.collection<ServiceSchema>('services');
 
-    const date = new Date();
-    const new_date = date.toLocaleString('en-US', {
-      timeZone: 'America/Argentina/Buenos_Aires',
-    })
+    const { first_date } = getIntervals();
 
     const banks = await model.aggregate([
       {
         $match: {
           $and: [
             { collect_money: true },
-            { date_of_service: { $lte: new_date } }
+            { date_of_service: { $lte: first_date } }
           ]
         }
       },
