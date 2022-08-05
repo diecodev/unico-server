@@ -27,7 +27,7 @@ export const updateBalance = async ({ request, response, cookies, params }: Rout
     if (!isLoggedIn) throw new Error('You do not have permission to access this resource.');
 
     // If user role is admin, or scheduler, then continue...
-    if (role === 'admin' || role === 'allocator') throw new Error('You do not have permission to access this resource.');
+    if (role === 'asignador') throw new Error('You do not have permission to access this resource.');
 
     const model = db.collection(params.role);
     const user = await model.findAndModify({ _id }, { update: { $inc: { balance: params.sort === 'inc' ? body.balance : -body.balance } }, new: true });
@@ -35,7 +35,7 @@ export const updateBalance = async ({ request, response, cookies, params }: Rout
     // if user is not found, return error
     if (!user) throw new Error('User not found');
 
-    response.status = 204;
+    response.status = 200;
     response.body = { data: user };
     return;
   } catch (error) {
