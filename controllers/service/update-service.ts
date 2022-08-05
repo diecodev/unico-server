@@ -1,8 +1,9 @@
+import db from '../../utils/db.ts';
+import { ServiceSchema } from '../../types.d.ts';
 import { TokenData } from '../controllers.types.d.ts'
 import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
-import { ServiceSchema } from '../../types.d.ts';
-import { privateKey, populateServiceOptions } from '../../constants.ts'
-import db from '../../utils/db.ts';
+import { privateKey, populateServiceOptions } from '../../constants.ts';
+import { getIntervals } from '../../utils/get-intervals.ts'
 
 export const updateService = async ({ request, response, cookies, params }: RouterContext<'/services/:id'>) => {
   // gettinf the token from the cookies
@@ -52,27 +53,30 @@ export const updateService = async ({ request, response, cookies, params }: Rout
     // taking service from array
     const service = service_populated[0];
 
-    // seting data sended to channel
-    const data = {
-      action: 'update',
-      service,
-    }
+    const { first_date, last_date } = getIntervals();
+    if (service.date_of_service >= first_date && service.date_of_service <= last_date) {
+      // seting data sended to channel
+      const data = {
+        action: 'update',
+        service,
+      }
 
-    // sending data to client channel
-    client_channel.postMessage(JSON.stringify(data));
-    // sending data to general channel
-    general_channel.postMessage(JSON.stringify(data));
+      // sending data to client channel
+      client_channel.postMessage(JSON.stringify(data));
+      // sending data to general channel
+      general_channel.postMessage(JSON.stringify(data));
 
-    /**
-     * If service was assign to a cadet, send the service to the cadet channel
-     * but, we need to verify if who picked the service is the same who delivered it
-     */
-    if (service?.picked_up_by && service.delivered_by) {
-      const cadet_channel = new BroadcastChannel(`cadet-${service.picked_up_by}`);
-      cadet_channel.postMessage(JSON.stringify(data));
+      /**
+       * If service was assign to a cadet, send the service to the cadet channel
+       * but, we need to verify if who picked the service is the same who delivered it
+       */
+      if (service?.picked_up_by && service.delivered_by) {
+        const cadet_channel = new BroadcastChannel(`cadet-${service.picked_up_by}`);
+        cadet_channel.postMessage(JSON.stringify(data));
 
-      const cadet_channel_2 = new BroadcastChannel(`cadet-${service.delivered_by}`);
-      (service.delivered_by !== service.picked_up_by) && cadet_channel_2.postMessage(JSON.stringify(data))
+        const cadet_channel_2 = new BroadcastChannel(`cadet-${service.delivered_by}`);
+        (service.delivered_by !== service.picked_up_by) && cadet_channel_2.postMessage(JSON.stringify(data))
+      }
     }
 
     response.status = 201;

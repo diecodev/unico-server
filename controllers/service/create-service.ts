@@ -1,9 +1,10 @@
-import { isAnService } from '../../utils/interfaces-validator.ts';
-import { TokenData } from '../controllers.types.d.ts'
-import { Context, verifyJwt, Bson } from '../../deps.ts';
-import { ServiceSchema } from '../../types.d.ts';
-import { privateKey, populateServiceOptions } from '../../constants.ts'
 import db from '../../utils/db.ts';
+import { ServiceSchema } from '../../types.d.ts';
+import { TokenData } from '../controllers.types.d.ts';
+import { getIntervals } from '../../utils/get-intervals.ts';
+import { Context, verifyJwt, Bson } from '../../deps.ts';
+import { isAnService } from '../../utils/interfaces-validator.ts';
+import { privateKey, populateServiceOptions } from '../../constants.ts'
 
 export const createService = async ({ request, response, cookies }: Context) => {
   // gettinf the token from the cookies
@@ -44,25 +45,28 @@ export const createService = async ({ request, response, cookies }: Context) => 
     const model = db.collection<ServiceSchema>('services');
     const new_service = await model.insertOne({ ...body, client_id, scheduled_by, date_of_service });
 
-    // getting the inserted service poopulated with client data
-    const service_populated = await model.aggregate([
-      { $match: { _id: new_service } },
-      ...populateServiceOptions
-    ]).toArray() as ServiceSchema[];
+    // if date of service is today or next 7 days, send the service to client and global channel
+    const { first_date, last_date } = getIntervals();
+    if (date_of_service >= first_date && date_of_service <= last_date) {
+      // getting the inserted service poopulated with client data
+      const service_populated = await model.aggregate([
+        { $match: { _id: new_service } },
+        ...populateServiceOptions
+      ]).toArray() as ServiceSchema[];
 
-    // Taking the inserted service from array
-    const service = service_populated[0];
+      // Taking the inserted service from array
+      const service = service_populated[0];
 
-    // creating the object send to client and global channels
-    const data = {
-      action: 'add',
-      service
+      // creating the object send to client and global channels
+      const data = {
+        action: 'add',
+        service
+      }
+      // sending the data to client channel
+      client_channel.postMessage(JSON.stringify(data));
+      // sending the data to general channel
+      general_channel.postMessage(JSON.stringify(data));
     }
-
-    // sending the data to client channel
-    client_channel.postMessage(JSON.stringify(data));
-    // sending the data to general channel
-    general_channel.postMessage(JSON.stringify(data));
 
     // return a response to client
     response.status = 201;
