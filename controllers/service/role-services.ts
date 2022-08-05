@@ -54,7 +54,7 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
     ]).toArray();
 
     response.status = 200;
-    response.body = { data: services };
+    response.body = { data: services[0] };
     return;
 
   } catch (error) {
