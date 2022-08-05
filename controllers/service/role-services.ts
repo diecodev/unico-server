@@ -30,10 +30,10 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
     const service_model = db.collection<ServiceSchema>('services');
 
     // taking dates for query
-    const { first_date } = getIntervals();
+    const { first_date, last_date } = getIntervals(false);
 
     const services = await service_model.aggregate([
-      { $match: { date_of_service: { $lte: first_date }, $or: [{ picked_up_by: id }, { delivered_by: id }, { client_id: id }, { scheduled_by: id }] } },
+      { $match: { date_of_service: { $lt: first_date, $gte: last_date }, $or: [{ picked_up_by: id }, { delivered_by: id }, { client_id: id }, { scheduled_by: id }] } },
       { $sort: { date_of_service: -1 } },
       ...populateServiceOptions,
       {
