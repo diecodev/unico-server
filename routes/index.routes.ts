@@ -23,6 +23,7 @@ import { createService } from '../controllers/service/create-service.ts';
 import { updateService } from '../controllers/service/update-service.ts';
 import { deleteService } from '../controllers/service/delete-service.ts';
 import { cadetsServices } from '../controllers/service/cadet-services.ts';
+import { roleServices } from '../controllers/service/role-services.ts';
 import { getServicesSorted } from '../controllers/service/get-services-sorted.ts'
 import { getAllCadetsBanks } from '../controllers/service/get-all-cadets-banks.ts';
 
@@ -75,6 +76,7 @@ router
   .get('/services/:sort', getServicesSorted) // get all services available * ascending * (admins and assistants)
   .get('/services/banks/:id', getAllCadetsBanks)
   .get('/services/cadet/:id/:sort', cadetsServices) // get all services available for a cadet
+  .get('/services/:role/:id', roleServices) // get all services available for a cadet
 
 // Log-out api endpoint
 router
