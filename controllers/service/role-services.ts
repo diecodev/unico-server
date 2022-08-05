@@ -11,7 +11,7 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
   const { role } = params;
   const id = new Bson.ObjectId(params.id);
 
-  const token = await cookies.get('untkca', { signed: true });
+  const token = await cookies.get('untkad', { signed: true });
 
   //setting the response type and status.
   response.status = 401;
@@ -24,7 +24,7 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
     const decoded = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // if the user is not an admin or scheduler, return error.
-    if (decoded.role !== ' admin' && decoded.role !== 'agendador') throw new Error('You have not access to this resource.');
+    if (decoded.role !== 'admin' && decoded.role !== 'agendador') throw new Error('You have not access to this resource.');
 
     // searching data in db
     const service_model = db.collection<ServiceSchema>('services');
