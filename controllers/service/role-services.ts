@@ -42,7 +42,7 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
             $sum: {
               $switch: {
                 branches: [
-                  { case: { $and: [{ $eq: ['$client_id._id', id] }, { collect_money: true }] }, then: '$collect_money_amount' },
+                  { case: { $and: [{ $eq: ['$client_id._id', id] }, { collect_money: { $eq: true } }] }, then: '$collect_money_amount' },
                   { case: { $eq: ['$return_collected_money_to', id] }, then: '$collect_money_amount' },
                 ],
                 default: 0,
