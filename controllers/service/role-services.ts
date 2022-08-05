@@ -36,6 +36,21 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
       { $match: { date_of_service: { $lte: first_date }, $or: [{ picked_up_by: id }, { delivered_by: id }, { client_id: id }, { scheduled_by: id }] } },
       { $sort: { date_of_service: -1 } },
       ...populateServiceOptions,
+      {
+        $group: {
+          _id: id, services: { $push: '$$ROOT' }, collect_money_total_amount: {
+            $sum: {
+              $switch: {
+                branches: [
+                  { case: { $and: [{ $eq: ['$client_id._id', id] }, { collect_money: true }] }, then: '$collect_money_amount' },
+                  { case: { $eq: ['$return_collected_money_to', id] }, then: '$collect_money_amount' },
+                ],
+                default: 0,
+              }
+            }
+          },
+        }
+      }
     ]).toArray();
 
     response.status = 200;
