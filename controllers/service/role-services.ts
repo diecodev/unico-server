@@ -18,13 +18,13 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
   response.type = 'application/json';
   try {
     // if there is not token or if sort is diff than asc or desc, return error.
-    // if (!token || (role !== 'clients' && role !== 'cadets' && role !== 'schedulers')) throw new Error('You have not access to this resource.');
+    if (!token || (role !== 'clients' && role !== 'cadets' && role !== 'schedulers')) throw new Error('You have not access to this resource.');
 
     // if there is a token, verify it.
-    // const decoded = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
+    const decoded = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // if the user is not an admin or scheduler, return error.
-    // if (decoded.role !== 'admin' && decoded.role !== 'agendador') throw new Error('You have not access to this resource.');
+    if (decoded.role !== 'admin' && decoded.role !== 'agendador') throw new Error('You have not access to this resource.');
 
     // searching data in db
     const service_model = db.collection<ServiceSchema>('services');
