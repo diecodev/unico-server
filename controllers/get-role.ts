@@ -25,7 +25,7 @@ export const getRole = async ({ response, cookies, params }: RouterContext<'/uni
     }
 
     // verifying the token
-    const { role, _id, isLoggedIn } = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
+    const { role, isLoggedIn } = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // if user is not logged in, return error
     if (!isLoggedIn) throw new Error('You do not have permission to access this resource.');
