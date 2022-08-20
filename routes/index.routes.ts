@@ -28,7 +28,7 @@ import { roleServices } from '../controllers/service/role-services.ts';
 import { getServicesSorted } from '../controllers/service/get-services-sorted.ts'
 import { getAllCadetsBanks } from '../controllers/service/get-all-cadets-banks.ts';
 
-import { getAllZones, createZone, updateZones, updateZonesPrices, createZonesPrices } from '../controllers/zones/zones.ts';
+// import { getAllZones, createZone, updateZones, updateZonesPrices, createZonesPrices } from '../controllers/zones/zones.ts';
 
 import { logout } from '../controllers/log-out.ts';
 
