@@ -14,6 +14,7 @@ import { schedulerLogin } from '../controllers/scheduler/scheduler-login.ts'
 import { schedulerUpdate } from '../controllers/scheduler/scheduler-update.ts'
 import { schedulerUpdateCriticalFields } from '../controllers/scheduler/scheduler-critical-fields.ts'
 
+import { cadetVerify } from '../controllers/cadet/cadet-verify.ts';
 import { cadetLogin } from '../controllers/cadet/cadet-login.ts';
 import { cadetUpdate } from '../controllers/cadet/cadet-update.ts';
 import { cadetUpdateCriticalFields } from '../controllers/cadet/cadet-update-critical-fields.ts';
@@ -26,6 +27,8 @@ import { cadetsServices } from '../controllers/service/cadet-services.ts';
 import { roleServices } from '../controllers/service/role-services.ts';
 import { getServicesSorted } from '../controllers/service/get-services-sorted.ts'
 import { getAllCadetsBanks } from '../controllers/service/get-all-cadets-banks.ts';
+
+import { getAllZones, createZone, updateZones, updateZonesPrices, createZonesPrices } from '../controllers/zones/zones.ts';
 
 import { logout } from '../controllers/log-out.ts';
 
@@ -63,6 +66,7 @@ router
 
 // Cadets api endpoints
 router
+  .get('/cadet', cadetVerify) // verify cadet login to keep session alive
   .post('/cadet', cadetLogin) // cadet login
   .put('/cadet', cadetUpdate) // update cadet data
   .post('/cadet/critical', cadetUpdateCriticalFields) // cadet update username, password and email information
@@ -77,6 +81,14 @@ router
   .get('/services/banks/:id', getAllCadetsBanks)
   .get('/services/cadet/:id/:sort', cadetsServices) // get all services available for a cadet
   .get('/services/:role/:id', roleServices) // get all services available for a cadet
+
+// zones api endpoints
+router
+  .get('/zones', getAllZones) // get all zones
+  .post('/zones', createZone) // update zones
+  .put('/zones', updateZones) // update zones
+  .post('/zones/prices', createZonesPrices) // update zones prices
+  .put('/zones/prices', updateZonesPrices) // update zones prices
 
 // Log-out api endpoint
 router
