@@ -83,12 +83,12 @@ router
   .get('/services/:role/:id', roleServices) // get all services available for a cadet
 
 // zones api endpoints
-router
-  .get('/zones', getAllZones) // get all zones
-  .post('/zones', createZone) // update zones
-  .put('/zones', updateZones) // update zones
-  .post('/zones/prices', createZonesPrices) // update zones prices
-  .put('/zones/prices', updateZonesPrices) // update zones prices
+// router
+//   .get('/zones', getAllZones) // get all zones
+//   .post('/zones', createZone) // update zones
+//   .put('/zones', updateZones) // update zones
+//   .post('/zones/prices', createZonesPrices) // update zones prices
+//   .put('/zones/prices', updateZonesPrices) // update zones prices
 
 // Log-out api endpoint
 router
