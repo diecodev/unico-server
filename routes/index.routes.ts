@@ -53,7 +53,7 @@ router
 // verify administrative login
 router
   .get('/unico/verify', administrativeLogin) // validate administrative users login (admins, allocators, schedulers)
-  .get('/unico/employees/:role', getRole)
+  .get('/unico/employees/:role', getRole) // get all data from a single role, ex: get all admins, allocators, schedulers (role = admin || allocator || scheduler)
   .post('/unico/register/:role', adminRegisterUsers) // register users (allocators, schedulers, cadets, clients)
   .put('/unico/update/:role/:id', administrativeUpdateFields)
   .put('/unico/balance/:role/:sort', updateBalance)

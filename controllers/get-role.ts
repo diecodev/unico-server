@@ -6,7 +6,7 @@ import { TokenData } from './controllers.types.d.ts';
 
 export const getRole = async ({ response, cookies, params }: RouterContext<'/unico/employees/:role'>) => {
   // Taking the cookie
-  const token = await cookies.get('untkad', { signed: true });
+  const token = await cookies.get('untkad', { signed: true }) || await cookies.get('untkca', { signed: true });
 
   // setting the response status and response type
   response.status = 401;
@@ -31,14 +31,11 @@ export const getRole = async ({ response, cookies, params }: RouterContext<'/uni
     if (!isLoggedIn) throw new Error('You do not have permission to access this resource.');
 
     // If user role is admin, or scheduler, then continue...
-    if (role === 'admin' || role === 'agendador') {
+    if (role === 'admin' || role === 'agendador' || role === 'asignador') {
 
       // connecting to DB and consulting data
       const user = db.collection<AdminSchema>(required_role);
-      const user_data = await user.find({}, { projection: { password: 0 } }).toArray() as Partial<AdminSchema>;
-
-      // Deleting password for admin
-      delete user_data.password;
+      const user_data = await user.find({}, { projection: { password: 0 } }).toArray();
 
       // returning the data
       response.status = 200;
