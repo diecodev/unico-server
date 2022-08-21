@@ -67,7 +67,7 @@ export const cadetUpdateCriticalFields = async ({ request, response, cookies }: 
     // If everything is ok, return the new data
     response.status = 200;
     response.body = { data: new_cadet };
-    await cookies.set('untkad', new_token, options);
+    await cookies.set('untkca', new_token, options);
     return;
   } catch (error) {
     // If there is an error, return error
