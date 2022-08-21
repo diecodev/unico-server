@@ -6,7 +6,8 @@ import { getEnterpriseServices } from '../../utils/get-enterprise-services.ts';
 export const getServicesSorted = async (ctx: RouterContext<'/services/:sort'>) => {
   const { cookies, response, params } = ctx;
 
-  const token = await cookies.get('untkad', { signed: true });
+  // taking admin or allocator cookie
+  const token = await cookies.get('untkad', { signed: true }) || await cookies.get('untkca', { signed: true })
 
   response.status = 401;
   response.type = 'application/json';
