@@ -6,7 +6,7 @@ import { TokenData } from './controllers.types.d.ts';
 
 export const updateBalance = async ({ request, response, cookies, params }: RouterContext<'/unico/balance/:role/:sort'>) => {
   // Taking the cookie
-  const token = await cookies.get('untkad', { signed: true });
+  const token = await cookies.get('untkad', { signed: true }) || await cookies.get('untkca', { signed: true });
 
   // setting the response status and response type
   response.status = 401;
@@ -26,8 +26,8 @@ export const updateBalance = async ({ request, response, cookies, params }: Rout
     // if user is not logged in, return error
     if (!isLoggedIn) throw new Error('You do not have permission to access this resource.');
 
-    // If user role is admin, or scheduler, then continue...
-    if (role === 'asignador') throw new Error('You do not have permission to access this resource.');
+    // If user role is admin, or scheduler or allocator, then continue...
+    if (role !== 'admin' && role !== 'agendador' && role !== 'asignador') throw new Error('You do not have permission to access this resource.');
 
     const model = db.collection(params.role);
     const user = await model.findAndModify({ _id }, { update: { $inc: { balance: params.sort === 'inc' ? body.balance : -body.balance } }, new: true });
