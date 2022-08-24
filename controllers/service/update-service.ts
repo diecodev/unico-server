@@ -7,7 +7,7 @@ import { getIntervals } from '../../utils/get-intervals.ts'
 
 export const updateService = async ({ request, response, cookies, params }: RouterContext<'/services/:id'>) => {
   // gettinf the token from the cookies
-  const token = await cookies.get('untkad', { signed: true });
+  const token = await cookies.get('untkad', { signed: true }) || await cookies.get('untkca', { signed: true });
 
   // setting response status and content type
   response.status = 401;
