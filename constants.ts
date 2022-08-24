@@ -121,6 +121,12 @@ export const populateServiceOptions = [
   },
   {
     $unwind: {
+      path: '$return_collected_money_to',
+      preserveNullAndEmptyArrays: true
+    }
+  },
+  {
+    $unwind: {
       path: '$delivered_by',
       preserveNullAndEmptyArrays: true
     }
