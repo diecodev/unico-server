@@ -44,6 +44,14 @@ export const populateServiceOptions = [
     }
   },
   {
+    $lookup: {
+      from: 'cadets',
+      localField: 'return_collected_money_to',
+      foreignField: '_id',
+      as: 'return_collected_money_to'
+    }
+  },
+  {
     $unset: [
       'delivered_by.password',
       'delivered_by.email',
@@ -72,6 +80,20 @@ export const populateServiceOptions = [
       'picked_up_by.dni_frontal_picture',
       'picked_up_by.dni_back_picture',
       'picked_up_by.vehicle_picture',
+
+      'return_collected_money_to.password',
+      'return_collected_money_to.email',
+      'return_collected_money_to.username',
+      'return_collected_money_to.profile_picture',
+      'return_collected_money_to.balance',
+      'return_collected_money_to.address',
+      'return_collected_money_to.phone',
+      'return_collected_money_to.is_active',
+      'return_collected_money_to.dni',
+      'return_collected_money_to.patent',
+      'return_collected_money_to.dni_frontal_picture',
+      'return_collected_money_to.dni_back_picture',
+      'return_collected_money_to.vehicle_picture',
 
       'client_id.role',
       'client_id.password',
