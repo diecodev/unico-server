@@ -21,7 +21,7 @@ export const updateService = async ({ request, response, cookies, params }: Rout
     const payload = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // is role is not scheduler, throw an error
-    if (payload.role !== 'agendador') throw new Error('You are not authorized to perform this action');
+    if (payload.role !== 'agendador' && payload.role !== 'asignador') throw new Error('You are not authorized to perform this action');
 
     // getting the body of the request
     const body = await request.body({ type: 'json' }).value as ServiceSchema;
