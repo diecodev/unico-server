@@ -27,7 +27,7 @@ export const cadetsServices = async (ctx: RouterContext<'/services/cadet/:id/:so
     const decoded = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // // if id of the token is not the same as the id of the cadet, return error.
-    if (decoded._id !== id) throw new Error('You have not access to this resource.');
+    if (decoded._id !== params.id as unknown) throw new Error('You have not access to this resource.');
 
     // searching data in db
     const service_model = db.collection<ServiceSchema>('services');
