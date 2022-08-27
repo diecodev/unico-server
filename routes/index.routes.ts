@@ -18,6 +18,7 @@ import { cadetVerify } from '../controllers/cadet/cadet-verify.ts';
 import { cadetLogin } from '../controllers/cadet/cadet-login.ts';
 import { cadetUpdate } from '../controllers/cadet/cadet-update.ts';
 import { cadetUpdateCriticalFields } from '../controllers/cadet/cadet-update-critical-fields.ts';
+import { getCadetsBanksGrouped } from '../controllers/cadet/get-all-banks.ts'
 
 import { getAllBanks } from '../controllers/service/get-all-banks.ts';
 import { createService } from '../controllers/service/create-service.ts';
@@ -70,6 +71,7 @@ router
   .post('/cadet', cadetLogin) // cadet login
   .put('/cadet', cadetUpdate) // update cadet data
   .post('/cadet/critical', cadetUpdateCriticalFields) // cadet update username, password and email information
+  .get('/cadet/banks', getCadetsBanksGrouped) // get all cadets banks grouped by id, services and total bank amount
 
 // services api endpoints
 router
