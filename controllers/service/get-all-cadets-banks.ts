@@ -7,7 +7,7 @@ import { getIntervals } from '../../utils/get-intervals.ts';
 
 export const getAllCadetsBanks = async ({ response, cookies, params }: RouterContext<'/services/banks/:id'>) => {
   // Taking the cookie
-  const token = await cookies.get('untkac', { signed: true });
+  const token = await cookies.get('untkca', { signed: true });
 
   // setting the response status and response type
   response.status = 401;
