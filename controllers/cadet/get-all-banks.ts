@@ -45,7 +45,7 @@ export const getCadetsBanksGrouped = async ({ response, cookies }: Context) => {
       ...populateServiceOptions,
       {
         $group: {
-          _id: '$return_collected_money_to._id',
+          _id: '$return_collected_money_to',
           services: { $push: '$$ROOT' },
           collect_money_total_amount: {
             $sum: '$collect_money_amount'
