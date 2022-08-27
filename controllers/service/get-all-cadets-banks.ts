@@ -21,7 +21,7 @@ export const getAllCadetsBanks = async ({ response, cookies, params }: RouterCon
     const { role, isLoggedIn } = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // if user is not logged in or user role is not cadet, return error
-    if (!isLoggedIn || role !== 'cadet') throw new Error('You do not have permission to access this resource.');
+    if (!isLoggedIn || (role !== 'cadete' && role !== 'asignador')) throw new Error('You do not have permission to access this resource.');
 
     // if user is a scheduler, continue...
     const model = db.collection<ServiceSchema>('services');
