@@ -35,7 +35,7 @@ export const getRole = async ({ response, cookies, params }: RouterContext<'/uni
 
       // connecting to DB and consulting data
       const user = db.collection<AdminSchema>(required_role);
-      const user_data = await user.find({}, { projection: { password: 0 } }).toArray();
+      const user_data = await user.find({}, { projection: { password: 0 }, sort: { balance: -1 } }).toArray();
 
       // returning the data
       response.status = 200;
