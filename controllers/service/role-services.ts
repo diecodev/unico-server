@@ -33,7 +33,13 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
     const { first_date, last_date } = getIntervals(false);
 
     const services = await service_model.aggregate([
-      { $match: { date_of_service: { $lt: first_date, $gte: last_date }, $or: [{ picked_up_by: id }, { delivered_by: id }, { client_id: id }, { scheduled_by: id }] } },
+      {
+        $match: {
+          date_of_service: { $lte: first_date, $gte: last_date },
+          $or: [{ picked_up_by: id }, { delivered_by: id }, { client_id: id }, { scheduled_by: id }],
+          service_status: { $ne: 'nuevo' }
+        }
+      },
       { $sort: { date_of_service: -1 } },
       ...populateServiceOptions,
       {
@@ -47,7 +53,7 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
                     then: '$collect_money_amount'
                   },
                   {
-                    case: { $eq: ['$return_collected_money_to', id] },
+                    case: { $and: [{ $eq: ['$return_collected_money_to._id', id] }, { $eq: ['$collect_money', true] }] },
                     then: '$collect_money_amount'
                   },
                 ],
