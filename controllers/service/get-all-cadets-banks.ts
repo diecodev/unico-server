@@ -33,7 +33,7 @@ export const getAllCadetsBanks = async ({ response, cookies, params }: RouterCon
     const banks = await model.aggregate([
       {
         $match: {
-          $and: [{ collect_money: true }, { date_of_service: { $lte: new Date(first_date) } }, { $or: [{ delivered_by: id }, { picked_up_by: id }] }]
+          $and: [{ collect_money: true }, { date_of_service: { $lte: new Date(first_date) } }, { return_collected_money_to: id }]
         }
       },
       ...populateServiceOptions,
