@@ -11,20 +11,20 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
   const { role } = params;
   const id = new Bson.ObjectId(params.id);
 
-  const token = await cookies.get('untkad', { signed: true });
+  // const token = await cookies.get('untkad', { signed: true });
 
   //setting the response type and status.
   response.status = 401;
   response.type = 'application/json';
   try {
     // if there is not token or if sort is diff than asc or desc, return error.
-    if (!token || (role !== 'clients' && role !== 'cadets' && role !== 'schedulers')) throw new Error('You have not access to this resource.');
+    // if (!token || (role !== 'clients' && role !== 'cadets' && role !== 'schedulers')) throw new Error('You have not access to this resource.');
 
     // if there is a token, verify it.
-    const decoded = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
+    // const decoded = (await verifyJwt(token, privateKey)).payload as unknown as TokenData;
 
     // if the user is not an admin or scheduler, return error.
-    if (decoded.role !== 'admin' && decoded.role !== 'agendador') throw new Error('You have not access to this resource.');
+    // if (decoded.role !== 'admin' && decoded.role !== 'agendador') throw new Error('You have not access to this resource.');
 
     // searching data in db
     const service_model = db.collection<ServiceSchema>('services');
@@ -36,7 +36,7 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
       {
         $match: {
           date_of_service: { $lte: first_date, $gte: last_date },
-          $or: [{ picked_up_by: id }, { delivered_by: id }, { client_id: id }, { scheduled_by: id }],
+          $or: [{ picked_up_by: id }, { delivered_by: id }, { client_id: id }, { scheduled_by: id }, { return_collected_money_to: id }],
           service_status: { $ne: 'nuevo' }
         }
       },
