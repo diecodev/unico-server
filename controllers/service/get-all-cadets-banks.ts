@@ -1,6 +1,6 @@
 import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
 import db from '../../utils/db.ts';
-import { privateKey } from '../../constants.ts';
+import { privateKey, populateServiceOptions } from '../../constants.ts';
 import { ServiceSchema } from '../../types.d.ts';
 import { TokenData } from '../controllers.types.d.ts';
 import { getIntervals } from '../../utils/get-intervals.ts';
@@ -30,9 +30,14 @@ export const getAllCadetsBanks = async ({ response, cookies, params }: RouterCon
 
     const id = new Bson.ObjectId(params.id);
 
-    const banks = await model.find({
-      $and: [{ collect_money: true }, { date_of_service: { $lte: new Date(first_date) } }, { $or: [{ delivered_by: id }, { picked_up_by: id }] }]
-    }).toArray();
+    const banks = await model.aggregate([
+      {
+        $match: {
+          $and: [{ collect_money: true }, { date_of_service: { $lte: new Date(first_date) } }, { $or: [{ delivered_by: id }, { picked_up_by: id }] }]
+        }
+      },
+      ...populateServiceOptions,
+    ]).toArray();
 
     response.status = 200;
     response.body = { data: banks };
