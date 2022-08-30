@@ -35,7 +35,6 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
         }
       },
       { $limit: 300 },
-      { $sort: { date_of_service: -1 } },
       ...populateServiceOptions,
       {
         $group: {
@@ -57,7 +56,8 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
             }
           },
         }
-      }
+      },
+      { $sort: { _id: -1 } }
     ]).toArray();
 
     response.status = 200;
