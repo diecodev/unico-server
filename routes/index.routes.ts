@@ -19,7 +19,7 @@ import { cadetLogin } from '../controllers/cadet/cadet-login.ts';
 import { cadetUpdate } from '../controllers/cadet/cadet-update.ts';
 import { cadetUpdateCriticalFields } from '../controllers/cadet/cadet-update-critical-fields.ts';
 import { getCadetsBanksGrouped } from '../controllers/cadet/get-all-banks.ts';
-import {cadetPendingServices} from '../controllers/cadet/cadet-pending-services.ts'
+import { cadetPendingServices } from '../controllers/cadet/cadet-pending-services.ts'
 
 import { getAllBanks } from '../controllers/service/get-all-banks.ts';
 import { createService } from '../controllers/service/create-service.ts';
@@ -75,7 +75,7 @@ router
   .get('/cadet/banks', getCadetsBanksGrouped) // get all cadets banks grouped by id, services and total bank amount
   .get('/cadet/pending/:id', cadetPendingServices) // get all the services that are pending to complete for a single cadet
 
-  // services api endpoint
+// services api endpoint
 router
   .post('/services', createService) // create a service
   .put('/services/:id', updateService) // update a service
