@@ -39,7 +39,7 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
       ...populateServiceOptions,
       {
         $group: {
-          _id: '$date_of_service', services: { $push: '$$ROOT' }, collect_money_total_amount: {
+          _id: '$date_of_service', data: { $push: '$$ROOT' }, collect_money_total_amount: {
             $sum: {
               $switch: {
                 branches: [
