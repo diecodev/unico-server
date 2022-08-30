@@ -2,7 +2,6 @@ import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
 import { TokenData } from '../controllers.types.d.ts'
 import { ServiceSchema } from '../../types.d.ts';
 import { privateKey, populateServiceOptions } from '../../constants.ts';
-import { getIntervals } from '../../utils/get-intervals.ts'
 import db from '../../utils/db.ts';
 
 export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) => {
