@@ -53,6 +53,7 @@ export interface ServiceSchema {
   delivered_by?: Bson.ObjectId;
   picked_up_by?: Bson.ObjectId;
   scheduled_by: Bson.ObjectId;
+  allocated_by?: Bson.ObjectId;
   origin_address: string;
   origin_address_details?: string;
   destination_address: string;
@@ -76,4 +77,19 @@ export interface ServiceSchema {
   service_cost: number;
   service_type: ServiceType;
   payment_of_delivery_cadet?: number; // If the service is delivered and picked up by different cadets, this is delivery cadet payment amount.
+}
+
+export interface ZonesSchema {
+  _id: Bson.ObjectId;
+  locality: string;
+  price_id: Bson.ObjectId;
+}
+
+export interface PricesSchema {
+  _id: Bson.ObjectId;
+  name: string;
+  price_flex: number;
+  price_correo: number;
+  price_express: number;
+  price_ecommerce: number;
 }
