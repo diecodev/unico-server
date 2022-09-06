@@ -32,11 +32,12 @@ export const updateService = async ({ request, response, cookies, params }: Rout
     const delivered_by = body.delivered_by ? new Bson.ObjectId(body.delivered_by) : undefined;
     const picked_up_by = body.picked_up_by ? new Bson.ObjectId(body.picked_up_by) : undefined;
     const return_collected_money_to = body.return_collected_money_to ? new Bson.ObjectId(body.return_collected_money_to) : undefined;
+    const allocated_by = body.allocated_by ? new Bson.ObjectId(body.allocated_by) : undefined;
     const _id = new Bson.ObjectId(params.id);
 
     // insert the service into the database
     const model = db.collection<ServiceSchema>('services');
-    const updated_service = await model.findAndModify({ _id }, { update: { $set: { ...body, client_id, date_of_service, delivered_by, picked_up_by, return_collected_money_to } } });
+    const updated_service = await model.findAndModify({ _id }, { update: { $set: { ...body, client_id, date_of_service, delivered_by, picked_up_by, allocated_by, return_collected_money_to } } });
 
     // if there is no service, throw an error
     if (!updated_service) throw new Error('Service not found');

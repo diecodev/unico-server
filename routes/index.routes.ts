@@ -9,6 +9,7 @@ import { administrativeLogin } from '../controllers/administrative-login.ts';
 import { adminRegisterUsers } from '../controllers/administrative-register-users.ts';
 import { administrativeUpdateFields } from '../controllers/administrative-update-fields.ts';
 import { updateBalance } from '../controllers/update-balance.ts';
+import { administrativeHistory } from '../controllers/administrative-history.ts';
 
 import { schedulerLogin } from '../controllers/scheduler/scheduler-login.ts'
 import { schedulerUpdate } from '../controllers/scheduler/scheduler-update.ts'
@@ -20,6 +21,7 @@ import { cadetUpdate } from '../controllers/cadet/cadet-update.ts';
 import { cadetUpdateCriticalFields } from '../controllers/cadet/cadet-update-critical-fields.ts';
 import { getCadetsBanksGrouped } from '../controllers/cadet/get-all-banks.ts';
 import { cadetPendingServices } from '../controllers/cadet/cadet-pending-services.ts'
+import { cadetHistory } from '../controllers/cadet/cadet-history.ts'
 
 import { getAllBanks } from '../controllers/service/get-all-banks.ts';
 import { createService } from '../controllers/service/create-service.ts';
@@ -59,6 +61,7 @@ router
   .post('/unico/register/:role', adminRegisterUsers) // register users (allocators, schedulers, cadets, clients)
   .put('/unico/update/:role/:id', administrativeUpdateFields)
   .put('/unico/balance/:role/:sort', updateBalance)
+  .get('/unico/history', administrativeHistory)
 
 // Scheduler api endpoints
 router
@@ -74,6 +77,7 @@ router
   .post('/cadet/critical', cadetUpdateCriticalFields) // cadet update username, password and email information
   .get('/cadet/banks', getCadetsBanksGrouped) // get all cadets banks grouped by id, services and total bank amount
   .get('/cadet/pending/:id', cadetPendingServices) // get all the services that are pending to complete for a single cadet
+  .get('/cadet/history/:id', cadetHistory) // get the history of all services to one cadet
 
 // services api endpoint
 router
