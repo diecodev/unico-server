@@ -21,7 +21,7 @@ export const getEnterpriseServices = async ({ sort }: Props) => {
         data: { $push: '$$ROOT' },
       },
     },
-    { $sort: { date_of_service: sort === 'asc' ? 1 : -1 } },
+    { $sort: { _id: sort === 'asc' ? 1 : -1 } },
   ]).toArray() as ServiceSchema[];
 
   return services;
