@@ -38,8 +38,9 @@ export const cadetHistory = async ({ response, cookies, params }: RouterContext<
     const banks = await model.aggregate([
       {
         $match: {
-          date_of_service: { $lt: first_date },
+          date_of_service: { $lte: first_date },
           $or: [{ picked_up_by: id }, { delivered_by: id }],
+          service_status: { $eq: 'terminado' }
         }
       },
       ...populateServiceOptions,

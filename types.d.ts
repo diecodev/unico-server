@@ -22,7 +22,7 @@ export interface AdminSchema {
   password: string;
   profile_picture: string;
   email: string;
-  balance: number;
+  balance: Bson.Double;
 }
 
 export interface SchedulerSchema extends AdminSchema {

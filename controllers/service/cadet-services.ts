@@ -36,7 +36,7 @@ export const cadetsServices = async (ctx: RouterContext<'/services/cadet/:id/:so
     const { first_date, last_date } = getIntervals(sort === 'asc');
 
     const services = await service_model.aggregate([
-      { $match: { date_of_service: { $gte: sort === "asc" ? first_date : last_date, $lt: sort === "asc" ? last_date : first_date }, $or: [{ picked_up_by: id }, { delivered_by: id }] } },
+      { $match: { date_of_service: { $gte: sort === "asc" ? first_date : last_date, $lt: sort === "asc" ? last_date : first_date }, $or: [{ picked_up_by: id }, { delivered_by: id }], service_status: { $ne: 'terminado' } } },
       { $sort: { date_of_service: sort === 'asc' ? 1 : -1 } },
       ...populateServiceOptions,
     ]).toArray();
