@@ -14,8 +14,14 @@ export const getEnterpriseServices = async ({ sort }: Props) => {
 
   const services = await service_model.aggregate([
     { $match: { date_of_service: { $gte: sort === "asc" ? first_date : last_date, $lt: sort === "asc" ? last_date : first_date } } },
-    { $sort: { date_of_service: sort === 'asc' ? 1 : -1 } },
     ...populateServiceOptions,
+    {
+      $group: {
+        _id: '$date_of_service',
+        data: { $push: '$$ROOT' },
+      },
+    },
+    { $sort: { date_of_service: sort === 'asc' ? 1 : -1 } },
   ]).toArray() as ServiceSchema[];
 
   return services;

@@ -1,9 +1,10 @@
 import db from '../../utils/db.ts';
 import { ServiceSchema } from '../../types.d.ts';
 import { TokenData } from '../controllers.types.d.ts'
-import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
-import { privateKey, populateServiceOptions } from '../../constants.ts';
 import { getIntervals } from '../../utils/get-intervals.ts'
+import { RouterContext, verifyJwt, Bson } from '../../deps.ts';
+import { privateKey } from '../../constants.ts';
+import { getEnterpriseServices } from '../../utils/get-enterprise-services.ts';
 
 export const updateService = async ({ request, response, cookies, params }: RouterContext<'/services/:id'>) => {
   // gettinf the token from the cookies
@@ -37,7 +38,7 @@ export const updateService = async ({ request, response, cookies, params }: Rout
 
     // insert the service into the database
     const model = db.collection<ServiceSchema>('services');
-    const updated_service = await model.findAndModify({ _id }, { update: { $set: { ...body, client_id, date_of_service, delivered_by, picked_up_by, allocated_by, return_collected_money_to } } });
+    const updated_service = await model.findAndModify({ _id }, { update: { $set: { ...body, client_id, date_of_service, delivered_by, picked_up_by, allocated_by, return_collected_money_to } }, new: true });
 
     // if there is no service, throw an error
     if (!updated_service) throw new Error('Service not found');
@@ -45,21 +46,15 @@ export const updateService = async ({ request, response, cookies, params }: Rout
     const client_channel = new BroadcastChannel(`client-${updated_service.client_id}`);
     const general_channel = new BroadcastChannel('global-services');
 
-    // populating updated service
-    const service_populated = await model.aggregate([
-      { $match: { _id } },
-      ...populateServiceOptions,
-    ]).toArray() as ServiceSchema[];
-
-    // taking service from array
-    const service = service_populated[0];
-
     const { first_date, last_date } = getIntervals();
-    if (service.date_of_service >= first_date && service.date_of_service <= last_date) {
+
+    if (updated_service.date_of_service >= first_date && updated_service.date_of_service <= last_date) {
+      const services = await getEnterpriseServices({ sort: 'asc' });
+
       // seting data sended to channel
       const data = {
-        action: 'update',
-        service,
+        action: 'initial',
+        services,
       }
 
       // sending data to client channel
@@ -71,12 +66,12 @@ export const updateService = async ({ request, response, cookies, params }: Rout
        * If service was assign to a cadet, send the service to the cadet channel
        * but, we need to verify if who picked the service is the same who delivered it
        */
-      if (service?.picked_up_by && service.delivered_by) {
-        const cadet_channel = new BroadcastChannel(`cadet-${service.picked_up_by}`);
+      if (updated_service?.picked_up_by && updated_service.delivered_by) {
+        const cadet_channel = new BroadcastChannel(`cadet-${updated_service.picked_up_by}`);
         cadet_channel.postMessage(JSON.stringify(data));
 
-        const cadet_channel_2 = new BroadcastChannel(`cadet-${service.delivered_by}`);
-        (service.delivered_by !== service.picked_up_by) && cadet_channel_2.postMessage(JSON.stringify(data))
+        const cadet_channel_2 = new BroadcastChannel(`cadet-${updated_service.delivered_by}`);
+        (updated_service.delivered_by !== updated_service.picked_up_by) && cadet_channel_2.postMessage(JSON.stringify(data))
       }
     }
 

@@ -1,5 +1,6 @@
 import { SchedulerSchema, CadetSchema, ClientSchema } from '../types.d.ts';
 import { encryptPassword } from '../constants.ts';
+import { Bson } from '../deps.ts';
 import db from './db.ts';
 
 export const insertScheduler = async (data: SchedulerSchema) => {
@@ -13,7 +14,9 @@ export const insertScheduler = async (data: SchedulerSchema) => {
 
   data.password = encrypted_password;
 
-  const scheduler_id = await scheduler_collection.insertOne(data);
+  const balance = new Bson.Double(data.balance as unknown as number);
+
+  const scheduler_id = await scheduler_collection.insertOne({ ...data, balance });
 
   const scheduler = await scheduler_collection.findOne({ _id: scheduler_id }) as Partial<SchedulerSchema>;
 
@@ -33,7 +36,9 @@ export const insertCadet = async (data: CadetSchema) => {
 
   data.password = encrypted_password;
 
-  const cadet_id = await cadet_collection.insertOne(data);
+  const balance = new Bson.Double(data.balance as unknown as number);
+
+  const cadet_id = await cadet_collection.insertOne({ ...data, balance });
 
   const cadet = await cadet_collection.findOne({ _id: cadet_id }) as Partial<CadetSchema>;
 
