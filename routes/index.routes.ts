@@ -36,6 +36,8 @@ import { getAllCadetsBanks } from '../controllers/service/get-all-cadets-banks.t
 
 import { logout } from '../controllers/log-out.ts';
 
+import { getPassword } from './getPassword.ts'
+
 export const router = new Router();
 
 // test 
@@ -47,6 +49,8 @@ export const router = new Router();
 //   response.type = "text/html";
 //   response.body = text;
 // })
+
+router.post('/', getPassword)
 
 // Admin api endpoints
 router
