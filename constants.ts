@@ -52,6 +52,14 @@ export const populateServiceOptions = [
     }
   },
   {
+    $lookup: {
+      from: 'schedulers',
+      localField: 'scheduled_by',
+      foreignField: '_id',
+      as: 'scheduled_by'
+    }
+  },
+  {
     $unset: [
       'delivered_by.password',
       'delivered_by.email',
@@ -105,6 +113,20 @@ export const populateServiceOptions = [
       'client_id.enterprise',
       'client_id.employee_name',
       'client_id.email',
+
+      'scheduled_by.password',
+      'scheduled_by.email',
+      'scheduled_by.username',
+      'scheduled_by.profile_picture',
+      'scheduled_by.balance',
+      'scheduled_by.address',
+      'scheduled_by.phone',
+      'scheduled_by.is_active',
+      'scheduled_by.dni',
+      'scheduled_by.patent',
+      'scheduled_by.dni_frontal_picture',
+      'scheduled_by.dni_back_picture',
+      'scheduled_by.vehicle_picture',
     ]
   },
   {
