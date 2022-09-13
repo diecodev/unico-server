@@ -153,4 +153,10 @@ export const populateServiceOptions = [
       preserveNullAndEmptyArrays: true
     }
   },
+  {
+    $unwind: {
+      path: '$scheduled_by',
+      preserveNullAndEmptyArrays: true
+    }
+  },
 ]
