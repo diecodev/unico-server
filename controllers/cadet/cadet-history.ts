@@ -51,7 +51,7 @@ export const cadetHistory = async ({ response, cookies, params }: RouterContext<
         }
       },
       {
-        $sort: { _id: 1 },
+        $sort: { _id: -1 },
       },
     ]).toArray();
 
