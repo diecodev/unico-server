@@ -12,7 +12,7 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 // If there is an error, reset the connection
-app.addEventListener('error', (event) => {
+app.addEventListener('error', (evt) => {
   if ("stack" in evt.error) {
     console.log({stack: evt.error.stack});
   } else if ("message" in evt.error) {
