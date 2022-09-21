@@ -13,8 +13,13 @@ app.use(router.allowedMethods());
 
 // If there is an error, reset the connection
 app.addEventListener('error', (event) => {
-  console.log(event.error);
-  controller.abort();
+  if ("stack" in evt.error) {
+    console.log({stack: evt.error.stack});
+  } else if ("message" in evt.error) {
+    console.log({message: evt.error.message});
+  } else {
+    console.log(`An undefined application error occurred.`);
+  }
 })
 
 console.log(`Server is running on http://localhost:${PORT}`);
