@@ -34,7 +34,6 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
           $or: [{ picked_up_by: id }, { delivered_by: id }, { client_id: id }, { scheduled_by: id }, { return_collected_money_to: id }],
         }
       },
-      { $limit: 300 },
       ...populateServiceOptions,
       {
         $group: {
@@ -57,7 +56,8 @@ export const roleServices = async (ctx: RouterContext<'/services/:role/:id'>) =>
           },
         }
       },
-      { $sort: { _id: -1 } }
+      { $sort: { _id: -1 } },
+      { $limit: 300 }
     ]).toArray();
 
     response.status = 200;
