@@ -52,7 +52,7 @@ export const cadetHistory = async ({ response, cookies, params }: RouterContext<
       },
       {
         $sort: { _id: -1 },
-        $limit: 1000,
+        $limit: 300,
       },
     ]).toArray();
 
