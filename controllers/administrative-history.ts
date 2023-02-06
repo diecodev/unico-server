@@ -48,6 +48,7 @@ export const administrativeHistory = async ({ response, cookies }: Context) => {
       },
       {
         $sort: { _id: -1 },
+        $limit: 1000,
       },
     ]).toArray();
 
