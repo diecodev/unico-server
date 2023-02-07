@@ -36,7 +36,7 @@ export const administrativeHistory = async ({ response, cookies }: Context) => {
     const banks = await model.aggregate([
       {
         $match: {
-          date_of_service: { $lt: first_date },
+          date_of_service: { $lte: first_date },
         }
       },
       ...populateServiceOptions,
@@ -44,7 +44,7 @@ export const administrativeHistory = async ({ response, cookies }: Context) => {
         $sort: { date_of_service: -1 },
       },
       {
-        $limit: 500,
+        $limit: 1000,
       },
       {
         $group: {
