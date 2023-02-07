@@ -41,6 +41,9 @@ export const administrativeHistory = async ({ response, cookies }: Context) => {
       },
       ...populateServiceOptions,
       {
+        $limit: 500,
+      },
+      {
         $group: {
           _id: '$date_of_service',
           data: { $push: '$$ROOT' },
@@ -48,9 +51,8 @@ export const administrativeHistory = async ({ response, cookies }: Context) => {
       },
       {
         $sort: { _id: -1 },
-        $limit: 1000,
       },
-    ]).toArray();
+    ], { allowDiskUse: true }).toArray();
 
     response.status = 200;
     response.body = { data: banks };
