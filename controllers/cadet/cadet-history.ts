@@ -45,6 +45,9 @@ export const cadetHistory = async ({ response, cookies, params }: RouterContext<
       },
       ...populateServiceOptions,
       {
+        $limit: 500,
+      },
+      {
         $group: {
           _id: '$date_of_service',
           data: { $push: '$$ROOT' },
@@ -52,9 +55,8 @@ export const cadetHistory = async ({ response, cookies, params }: RouterContext<
       },
       {
         $sort: { _id: -1 },
-        $limit: 300,
       },
-    ]).toArray();
+    ], { allowDiskUse: true }).toArray();
 
     response.status = 200;
     response.body = { data: banks };
