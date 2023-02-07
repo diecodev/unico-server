@@ -45,16 +45,16 @@ export const cadetHistory = async ({ response, cookies, params }: RouterContext<
       },
       ...populateServiceOptions,
       {
-        $limit: 500,
+        $sort: { date_of_service: -1 },
+      },
+      {
+        $limit: 1000,
       },
       {
         $group: {
           _id: '$date_of_service',
           data: { $push: '$$ROOT' },
         }
-      },
-      {
-        $sort: { _id: -1 },
       },
     ], { allowDiskUse: true }).toArray();
 

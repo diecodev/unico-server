@@ -41,6 +41,9 @@ export const administrativeHistory = async ({ response, cookies }: Context) => {
       },
       ...populateServiceOptions,
       {
+        $sort: { date_of_service: -1 },
+      },
+      {
         $limit: 500,
       },
       {
@@ -48,9 +51,6 @@ export const administrativeHistory = async ({ response, cookies }: Context) => {
           _id: '$date_of_service',
           data: { $push: '$$ROOT' },
         }
-      },
-      {
-        $sort: { _id: -1 },
       },
     ], { allowDiskUse: true }).toArray();
 
