@@ -56,6 +56,9 @@ export const cadetHistory = async ({ response, cookies, params }: RouterContext<
           data: { $push: '$$ROOT' },
         }
       },
+      {
+        $sort: { _id: -1 },
+      },
     ], { allowDiskUse: true }).toArray();
 
     response.status = 200;

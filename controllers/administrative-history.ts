@@ -52,6 +52,9 @@ export const administrativeHistory = async ({ response, cookies }: Context) => {
           data: { $push: '$$ROOT' },
         }
       },
+      {
+        $sort: { _id: -1 },
+      },
     ], { allowDiskUse: true }).toArray();
 
     response.status = 200;
