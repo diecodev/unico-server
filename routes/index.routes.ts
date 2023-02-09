@@ -46,7 +46,7 @@ router.post('/services/invoice', async (ctx) => {
   const { initialDate, endDate } = await ctx.request.body().value
   const model = db.collection<ServiceSchema>('services')
 
-  const result = await model.find({ date_of_service: { $gte: initialDate, $lte: endDate } }).sort({ date_of_service: -1 }).toArray();
+  const result = await model.find({ date_of_service: { $gte: new Date(initialDate), $lte: new Date(endDate) } }).sort({ date_of_service: -1 }).toArray();
 
 
   ctx.response.type = 'application/json'
