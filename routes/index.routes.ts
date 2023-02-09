@@ -43,12 +43,15 @@ import { getPassword } from './getPassword.ts'
 export const router = new Router();
 
 router.post('/services/invoice', async (ctx) => {
-  const { initialData, endDate } = await ctx.request.body().value
+  const { initialDate, endDate } = await ctx.request.body().value
   const model = db.collection<ServiceSchema>('services')
 
-  const result = await model.find({ date_of_service: { $gte: initialData, $lte: endDate } }).sort({ date_of_service: -1 }).toArray();
+  const result = await model.find({ date_of_service: { $gte: initialDate, $lte: endDate } }).sort({ date_of_service: -1 }).toArray();
 
-  return { data: result }
+
+  ctx.response.type = 'application/json'
+  ctx.response.status = 200
+  ctx.response.body = { data: result }
 })
 // test 
 // router.get('/', async ({ response }) => {
