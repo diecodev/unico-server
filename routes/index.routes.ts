@@ -1,4 +1,4 @@
-import { Router } from '../deps.ts';
+import { Router, Bson } from '../deps.ts';
 import db from '../utils/db.ts';
 import { ServiceSchema } from '../types.d.ts';
 
@@ -43,10 +43,10 @@ import { getPassword } from './getPassword.ts'
 export const router = new Router();
 
 router.post('/services/invoice', async (ctx) => {
-  const { initialDate, endDate } = await ctx.request.body().value
+  const { initialDate, endDate, clientId } = await ctx.request.body().value
   const model = db.collection<ServiceSchema>('services')
 
-  const result = await model.find({ date_of_service: { $gte: new Date(initialDate), $lte: new Date(endDate) } }).sort({ date_of_service: -1 }).toArray();
+  const result = await model.find({ date_of_service: { $gte: new Date(initialDate), $lte: new Date(endDate) }, client_id: new Bson.ObjectId(clientId) }).sort({ date_of_service: -1 }).toArray();
 
 
   ctx.response.type = 'application/json'
