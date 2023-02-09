@@ -1,4 +1,6 @@
 import { Router } from '../deps.ts';
+import db from '../utils/db.ts';
+import { ServiceSchema } from '../types.d.ts';
 
 import { adminLogin } from '../controllers/admin/admin-login.ts';
 import { adminUpdate } from '../controllers/admin/admin-update.ts';
@@ -40,6 +42,14 @@ import { getPassword } from './getPassword.ts'
 
 export const router = new Router();
 
+router.post('/services/invoide', async (ctx) => {
+  const { initialData, endDate } = await ctx.request.body().value
+  const model = db.collection<ServiceSchema>('services')
+
+  const result = await model.find({ date_of_service: { $gte: initialData, $lte: endDate } }).sort({ date_of_service: -1 }).toArray();
+
+  return { data: result }
+})
 // test 
 // router.get('/', async ({ response }) => {
 //   const decoder = new TextDecoder("utf-8");
