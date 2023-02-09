@@ -42,7 +42,7 @@ import { getPassword } from './getPassword.ts'
 
 export const router = new Router();
 
-router.post('/services/invoide', async (ctx) => {
+router.post('/services/invoice', async (ctx) => {
   const { initialData, endDate } = await ctx.request.body().value
   const model = db.collection<ServiceSchema>('services')
 
